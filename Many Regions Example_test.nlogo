@@ -145,6 +145,12 @@ to keep-in-region [ which-region ] ; turtle procedure
   ]
 
 end
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;TEST;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to DontClick
+  show count turtles
+end
+
 
 
 ; Public Domain:
@@ -258,6 +264,23 @@ NIL
 NIL
 NIL
 0
+
+BUTTON
+60
+205
+142
+238
+NIL
+DontClick
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
