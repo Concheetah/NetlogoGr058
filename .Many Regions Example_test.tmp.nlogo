@@ -147,6 +147,7 @@ to keep-in-region [ which-region ] ; turtle procedure
 end
 
 
+
 ; Public Domain:
 ; To the extent possible under law, Uri Wilensky has waived all
 ; copyright and related or neighboring rights to this model.
@@ -177,23 +178,6 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
-
-BUTTON
-0
-0
-0
-0
-NIL
-NIL
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 SLIDER
 10
@@ -275,6 +259,23 @@ NIL
 NIL
 NIL
 0
+
+BUTTON
+60
+205
+142
+238
+NIL
+DontClick
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
