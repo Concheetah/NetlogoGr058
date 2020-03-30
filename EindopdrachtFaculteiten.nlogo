@@ -1,109 +1,33 @@
-globals [
-  region-boundaries ; a list of regions definitions, where each region is a list of its min pxcor and max pxcor
-]
+patches-own[faculteit]
 
-patches-own [
-  region ; the number of the region that the patch is in, patches outside all regions have region = 0
+globals [
+  faculteit-boundaries ; a list of faculteits definitions, where each faculteit is a list of its min pxcor and max pxcor
 ]
 
 to setup
   clear-all
-
-  ; First, create the desired number of regions.
-  ; If you want to use many regions in your own
-  ; model, this is the crucial part.
-  setup-regions number-of-regions
-
-  ; Color all the regions differently. In your own
-  ; model, things would probably look different
-  color-regions
-
-  ; Finally, distribute the turtles in the different regions
-  setup-turtles
-
-  reset-ticks
+  setup-faculteiten 4
+  color-faculteiten
 end
 
-to color-regions
-  ; The patches with region = 0 act as dividers and are
-  ; not part of any region. All other patches get colored
-  ; according to the region they're in.
-  ask patches with [ region != 0 ] [
-    set pcolor 2 + region * 10
-    set plabel-color pcolor + 1
-    set plabel region
-  ]
-end
+;;;;;;;;;;;;;;;;;;;;;;;;; Faculteiten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to setup-turtles
-  ; This procedure simply creates turtles in the different regions.
-  ; The `foreach` pattern shown can be used whenever you
-  ; need to do something for each different region.
-  foreach (range 1 (length region-boundaries + 1)) [ region-number ->
-    let region-patches patches with [ region = region-number ]
-    create-turtles number-of-turtles-per-region [
-      move-to one-of region-patches
-      set color pcolor + 3
-    ]
-  ]
-end
-
-to go
-  ask turtles [ move ]
-  tick
-end
-
-to move ; turtle procedure
-
-  ; Turtles will move differently in different models, but
-  ; the general pattern shown here should be applied for all
-  ; movements of turtles that need to stay in a specific region.
-
-  ; First, save the region that the turtle is currently in:
-  let current-region region
-  ; Then, after saving the region, we can move the turtle:
-  right random 30
-  left random 30
-  forward 0.25
-  ; Finally, after moving, make sure the turtle
-  ; stays in the region it was in before:
-  keep-in-region current-region
-
-end
-
-to setup-regions [ num-regions ]
-  ; First, draw some dividers at the intervals reported by `region-divisions`:
-  foreach region-divisions num-regions draw-region-division
-  ; Store our region definitions globally for faster access:
-  set region-boundaries calculate-region-boundaries num-regions
-  ; Set the `region` variable for all patches included in regions:
-  let region-numbers (range 1 (num-regions + 1))
-  (foreach region-boundaries region-numbers [ [boundaries region-number] ->
+to setup-faculteiten [num-faculteiten]
+  ; First, draw some dividers at the intervals reported by `faculteiten-divisions`:
+  foreach faculteiten-divisions num-faculteiten draw-faculteit-division
+  ; Store our faculteit definitions globally for faster access:
+  set faculteit-boundaries calculate-faculteit-boundaries num-faculteiten
+  ; Set the `faculteit` variable for all patches included in faculteits:
+  let faculteit-numbers (range 1 (num-faculteiten + 1))
+  (foreach faculteit-boundaries faculteit-numbers [ [boundaries faculteit-number] ->
     ask patches with [ pxcor >= first boundaries and pxcor <= last boundaries ] [
-      set region region-number
+      ; [Added to the model] Every faculteit is related to a letter of the alphabet e.g. number 1 is A and 2 is B
+      set faculteit faculteit-number
     ]
   ])
 end
 
-to-report calculate-region-boundaries [ num-regions ]
-  ; The region definitions are built from the region divisions:
-  let divisions region-divisions num-regions
-  ; Each region definition lists the min-pxcor and max-pxcor of the region.
-  ; To get those, we use `map` on two "shifted" copies of the division list,
-  ; which allow us to scan through all pairs of dividers
-  ; and built our list of definitions from those pairs:
-  report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
-end
-
-to-report region-divisions [ num-regions ]
-  ; This procedure reports a list of pxcor that should be outside every region.
-  ; Patches with these pxcor will act as "dividers" between regions.
-  report n-values (num-regions + 1) [ n ->
-    [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-regions))) 0
-  ]
-end
-
-to draw-region-division [ x ]
+to draw-faculteit-division [ x ]
   ; This procedure makes the division patches grey
   ; and draw a vertical line in the middle. This is
   ; arbitrary and could be modified to your liking.
@@ -125,37 +49,41 @@ to draw-region-division [ x ]
   ]
 end
 
-to keep-in-region [ which-region ] ; turtle procedure
-
-  ; This is the procedure that make sure that turtles don't leave the region they're
-  ; supposed to be in. It is your responsibility to call this whenever a turtle moves.
-  if region != which-region [
-    ; Get our region boundaries from the global region list:
-    let region-min-pxcor first item (which-region - 1) region-boundaries
-    let region-max-pxcor last item (which-region - 1) region-boundaries
-    ; The total width is (min - max) + 1 because `pxcor`s are in the middle of patches:
-    let region-width (region-max-pxcor - region-min-pxcor) + 1
-    ifelse xcor < region-min-pxcor [ ; if we crossed to the left,
-      set xcor xcor + region-width   ; jump to the right boundary
-    ] [
-      if xcor > region-max-pxcor [   ; if we crossed to the right,
-        set xcor xcor - region-width ; jump to the left boundary
-      ]
-    ]
+to-report faculteiten-divisions [ num-faculteits ]
+  ; This procedure reports a list of pxcor that should be outside every faculteit.
+  ; Patches with these pxcor will act as "dividers" between faculteits.
+  report n-values (num-faculteits + 1) [ n ->
+    [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-faculteits))) 0
   ]
-
 end
 
+to-report calculate-faculteit-boundaries [ num-faculteits ]
+  ; The faculteit definitions are built from the faculteit divisions:
+  let divisions faculteiten-divisions num-faculteits
+  ; Each faculteit definition lists the min-pxcor and max-pxcor of the faculteit.
+  ; To get those, we use `map` on two "shifted" copies of the division list,
+  ; which allow us to scan through all pairs of dividers
+  ; and built our list of definitions from those pairs:
+  report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
+end
 
+; [Added to the model] Background color of the 'faculteiten'
+to color-faculteiten
+  ; The patches with region = 0 act as dividers and are
+  ; not part of any region. All other patches get colored
+  ; according to the region they're in.
+  ask patches with [ faculteit != 0 ] [
+    ifelse faculteit = 1[set pcolor 14]
+    [ifelse faculteit = 2 [set pcolor 34]
+      [ifelse faculteit = 3 [set pcolor 44]
+        [if faculteit = 4 [set pcolor 84]]]]]
 
-; Public Domain:
-; To the extent possible under law, Uri Wilensky has waived all
-; copyright and related or neighboring rights to this model.
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-245
+210
 10
-1098
+647
 448
 -1
 -1
@@ -169,104 +97,23 @@ GRAPHICS-WINDOW
 1
 1
 1
--32
-32
 -16
 16
-1
-1
+-16
+16
+0
+0
 1
 ticks
 30.0
 
-SLIDER
-10
-10
-235
-43
-number-of-regions
-number-of-regions
-1
-32
-4.0
-1
-1
-NIL
-HORIZONTAL
-
 BUTTON
-10
-90
-83
-123
+57
+78
+120
+111
 NIL
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-10
-46
-235
-79
-number-of-turtles-per-region
-number-of-turtles-per-region
-1
-100
-10.0
-1
-1
-NIL
-HORIZONTAL
-
-BUTTON
-105
-90
-168
-123
-NIL
-go
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-0
-
-BUTTON
-170
-90
-233
-123
-NIL
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-0
-
-BUTTON
-60
-205
-142
-238
-NIL
-DontClick
+setup\n
 NIL
 1
 T
@@ -280,49 +127,39 @@ NIL
 @#$#@#$#@
 ## WHAT IS IT?
 
-This example shows how to divide the world in a variable number of regions and keep turtles confined to the region they start in.
+(a general understanding of what the model is trying to show or explain)
 
 ## HOW IT WORKS
 
-The world is separated in regions divided by vertical lines. When a turtle reaches the left or right boundary of a region, it crosses to the other side, thereby always staying in the same region.
+(what rules the agents use to create the overall behavior of the model)
 
 ## HOW TO USE IT
 
-Choose the NUMBER-OF-REGIONS and the NUMBER-OF-TURTLES-PER-REGION that you want, click SETUP, and then GO.
+(how to use the model, including a description of each of the items in the Interface tab)
 
 ## THINGS TO NOTICE
 
-You can [`watch`](http://ccl.northwestern.edu/netlogo/docs/dictionary.html#watch) one of the turtles and see it jumping to the other edge of the region when it reaches its boundary. Running the model at slower speed makes this easier to see.
+(suggested things for the user to notice while running the model)
 
 ## THINGS TO TRY
 
-The NUMBER-OF-REGIONS slider is currently capped at a maximum of 32 regions. This number creates narrow regions: only one patch wide! There is still enough room for all of them, however. What do you think would happen if you increased the maximum to a bigger number? Try it. Does the model still work? Why?
+(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
 
 ## EXTENDING THE MODEL
 
-When a turtle reaches the left or right boundary of a region, they "wrap" to the other side. That's not the only possible behavior: they could also just stop there.
-
-The current model only allows vertical regions. Changing to use horizontal regions instead should be fairly easy, but how about a making "grid" of regions, where you would specify a number of rows and a number of columns?
-
-Look at the Bug Hunt models in the library: they use a special breed of turtles called "dividers", with a custom turtle shape, to cover the region divisions and make the wrapping animation appear smoother. You can try to do the same here.
+(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
 
 ## NETLOGO FEATURES
 
-This model makes use of the variadic versions of [`foreach`](http://ccl.northwestern.edu/netlogo/docs/dictionary.html#foreach) and [`map`](http://ccl.northwestern.edu/netlogo/docs/dictionary.html#map), which allow these primitives to be used with multiple lists at the same time.
-
-The `map` primitive is used in the `region-definitions` procedure to loop through two copies of the divisions list at once, thereby scanning through "pairs" of divisions.
-
-The `foreach` primitive is used in various places to loop through regions and their indices (generated with [`n-values`](http://ccl.northwestern.edu/netlogo/docs/dictionary.html#n-values)). This advantageously replaces a `while` loop, as it is both shorter and less error-prone.
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
 
 ## RELATED MODELS
 
-The Bug Hunt models in the ModelSim folder of the library use a version of this code to separate the bugs in two distinct regions.
+(models in the NetLogo Models Library and elsewhere which are of related interest)
 
 ## CREDITS AND REFERENCES
 
-This example was developed by Nicolas Payette, inspired by Michael Novak's work on various ModelSim models.
-
-<!-- 2015 -->
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 default
 true
@@ -646,5 +483,5 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 @#$#@#$#@
-1
+0
 @#$#@#$#@
