@@ -69,9 +69,10 @@ end
 
 ; [Added to the model] Background color of the 'faculteiten'
 to color-faculteiten
-  ; The patches with region = 0 act as dividers and are
-  ; not part of any region. All other patches get colored
-  ; according to the region they're in.
+  ; Faculteit A krijgt een kleurcode 14,
+  ; Faculteit B krijgt een kleurcode 34,
+  ; Faculteit C krijgt een kleurcode 44,
+  ; Faculteit D krijgt een kleurcode 84.
   ask patches with [ faculteit != 0 ] [
     ifelse faculteit = 1[set pcolor 14]
     [ifelse faculteit = 2 [set pcolor 34]
