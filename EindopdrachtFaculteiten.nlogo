@@ -1,7 +1,10 @@
-patches-own[faculteit]
+patches-own[
+  faculteit ; a list of the faculteiten
+  profile ; a list of the faculty's profile in S, T, P
+]
 
 globals [
-  faculteit-boundaries ; a list of faculteits definitions, where each faculteit is a list of its min pxcor and max pxcor
+  faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
 ]
 
 to setup
@@ -13,24 +16,18 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;; Faculteiten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup-faculteiten [num-faculteiten]
-  ; First, draw some dividers at the intervals reported by `faculteiten-divisions`:
   foreach faculteiten-divisions num-faculteiten draw-faculteit-division
-  ; Store our faculteit definitions globally for faster access:
   set faculteit-boundaries calculate-faculteit-boundaries num-faculteiten
-  ; Set the `faculteit` variable for all patches included in faculteits:
-  let faculteit-numbers (range 1 (num-faculteiten + 1))
-  (foreach faculteit-boundaries faculteit-numbers [ [boundaries faculteit-number] ->
+  let faculteit-letters ["A" "B" "C" "D"]
+  (foreach faculteit-boundaries faculteit-letters [ [boundaries faculteit-number] ->
     ask patches with [ pxcor >= first boundaries and pxcor <= last boundaries ] [
-      ; [Added to the model] Every faculteit is related to a letter of the alphabet e.g. number 1 is A and 2 is B
-      set faculteit faculteit-number
+      set faculteit faculteit-letters
     ]
   ])
 end
 
 to draw-faculteit-division [ x ]
-  ; This procedure makes the division patches grey
-  ; and draw a vertical line in the middle. This is
-  ; arbitrary and could be modified to your liking.
+
   ask patches with [ pxcor = x ] [
     set pcolor grey + 1.5
   ]
@@ -50,20 +47,13 @@ to draw-faculteit-division [ x ]
 end
 
 to-report faculteiten-divisions [ num-faculteits ]
-  ; This procedure reports a list of pxcor that should be outside every faculteit.
-  ; Patches with these pxcor will act as "dividers" between faculteits.
   report n-values (num-faculteits + 1) [ n ->
     [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-faculteits))) 0
   ]
 end
 
 to-report calculate-faculteit-boundaries [ num-faculteits ]
-  ; The faculteit definitions are built from the faculteit divisions:
   let divisions faculteiten-divisions num-faculteits
-  ; Each faculteit definition lists the min-pxcor and max-pxcor of the faculteit.
-  ; To get those, we use `map` on two "shifted" copies of the division list,
-  ; which allow us to scan through all pairs of dividers
-  ; and built our list of definitions from those pairs:
   report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
 end
 
@@ -74,12 +64,13 @@ to color-faculteiten
   ; Faculteit C krijgt een kleurcode 44,
   ; Faculteit D krijgt een kleurcode 84.
   ask patches with [ faculteit != 0 ] [
-    ifelse faculteit = 1[set pcolor 14]
-    [ifelse faculteit = 2 [set pcolor 34]
-      [ifelse faculteit = 3 [set pcolor 44]
-        [if faculteit = 4 [set pcolor 84]]]]]
+    ifelse faculteit = "A"[set pcolor 14]
+    [ifelse faculteit = "B" [set pcolor 34]
+      [ifelse faculteit = "C" [set pcolor 44]
+        [if faculteit = "D" [set pcolor 84]]]]]
 
 end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -125,6 +116,23 @@ NIL
 NIL
 1
 
+BUTTON
+57
+136
+120
+169
+NIL
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -140,7 +148,7 @@ NIL
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+Parts of the code are copied of Many Regions Example.
 
 ## THINGS TO TRY
 
@@ -467,7 +475,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
