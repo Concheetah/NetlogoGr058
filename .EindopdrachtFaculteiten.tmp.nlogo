@@ -2,7 +2,7 @@ patches-own[
   faculteit ; a list of the faculteiten
   faculteit-profile    ; a list of the faculty profile
   faculteit-letter ; faculty name
-  strategie ; voorlichtingsstrategie van de faculteit
+
 ]
 
 globals [
@@ -105,7 +105,8 @@ end
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
 to test
-  test-faculties
+  test-faculty-numbers
+  test-strategie
 end
 
 to test-faculties
@@ -113,18 +114,9 @@ to test-faculties
     output-print faculteit-letter
     output-print faculteit-profile
     output-print strategie]
-  ask one-of patches with [faculteit-letter = "B"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-  ask one-of patches with [faculteit-letter = "C"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-  ask one-of patches with [faculteit-letter = "D"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
+  ask one-of patches with [faculteit-letter = "B"] [output-print faculteit-profile]
+  ask one-of patches with [faculteit-letter = "C"] [output-print faculteit-profile]
+  ask one-of patches with [faculteit-letter = "D"] [output-print faculteit-profile]
 end
 
 @#$#@#$#@
@@ -174,7 +166,7 @@ NIL
 
 OUTPUT
 49
-135
+179
 192
 334
 11
