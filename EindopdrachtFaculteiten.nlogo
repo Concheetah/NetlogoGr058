@@ -1,8 +1,12 @@
 patches-own[
   faculteit ; a list of the faculteiten
-  faculteit-profile    ; a list of the faculty profile
+  faculteit-profile    ; a list of the faculty profile (S, T, P)
   faculteit-letter ; faculty name
   strategie ; voorlichtingsstrategie van de faculteit
+]
+
+turtles-own[
+  student-profile ; a list of the students profile (S, T, P)
 ]
 
 globals [
@@ -13,7 +17,7 @@ globals [
 to setup
   clear-all
   setup-faculteiten 4
-  color-faculteiten
+  setup-studenten
   test
 end
 
@@ -28,9 +32,44 @@ to setup-faculteiten [num-faculteiten]
       set faculteit faculteit-number
     ]
   ])
-  ; profiel toekennen aan de faculteiten
-  create-faculteit-profile
-  ;
+  ask patches with [faculteit = 1][
+    set faculteit-letter "A"
+    set faculteit-profile [8 2 2]
+    set pcolor 14
+    set strategie "honest"
+  ]
+  ask patches with [faculteit = 2][
+    set faculteit-letter "B"
+    set faculteit-profile [2 8 3]
+    set pcolor 34
+    set strategie "honest"
+  ]
+  ask patches with [faculteit = 3][
+    set faculteit-letter "C"
+    set faculteit-profile [2 8 8]
+    set pcolor 44
+    set strategie "honest"
+  ]
+  ask patches with [faculteit = 4][
+    set faculteit-letter "D"
+    set faculteit-profile [5 5 9]
+    set strategie "honest"
+    set pcolor 84
+  ]
+end
+
+to setup-studenten
+  create-turtles 300
+  [
+    set student-profile ["S" "T" "P"]
+    setxy random-xcor random-ycor
+    foreach student-profile [a -> set a (random 9 + 1)] ; hier moet iets veranderd worden
+    output-print student-profile
+  ]
+;  ask turtles[
+;     output-print replace-item 0 student-profile (random 9 + 1)
+;     output-print replace-item 1 student-profile (random 9 + 1)
+;  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -63,49 +102,13 @@ to-report calculate-faculteit-boundaries [ num-faculteits ]
   report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
 end
 
-; [Added to the model] Background color of the 'faculteiten'
-to color-faculteiten
-  ; Faculteit A krijgt een kleurcode 14,
-  ; Faculteit B krijgt een kleurcode 34,
-  ; Faculteit C krijgt een kleurcode 44,
-  ; Faculteit D krijgt een kleurcode 84.
-  ask patches with [ faculteit != 0 ] [
-    ifelse faculteit = 1[set pcolor 14]
-    [ifelse faculteit = 2[set pcolor 34]
-      [ifelse faculteit = 3 [set pcolor 44]
-        [if faculteit = 4 [set pcolor 84]]]]]
-
-end
-
-; set the faculty values of the profile and the faculty name
-to create-faculteit-profile
-  ask patches with [faculteit = 1][
-    set faculteit-letter "A"
-    set faculteit-profile [8 2 2]
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 2][
-    set faculteit-letter "B"
-    set faculteit-profile [2 8 3]
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 3][
-    set faculteit-letter "C"
-    set faculteit-profile [2 8 8]
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 4][
-    set faculteit-letter "D"
-    set faculteit-profile [5 5 9]
-    set strategie "honest"
-  ]
-end
-
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
+
 to test
-  test-faculties
+;  test-faculties
+;  test-studenten
 end
 
 to test-faculties
