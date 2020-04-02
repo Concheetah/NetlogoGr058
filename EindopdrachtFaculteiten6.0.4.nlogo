@@ -63,8 +63,7 @@ to setup-studenten
   [
     set student-profile ["S" "T" "P"]
     setxy random-xcor random-ycor
-    foreach student-profile [a -> set a (random 9 + 1)] ; hier moet iets veranderd worden
-    output-print student-profile
+    output-print map [a -> random 10] student-profile
   ]
 ;  ask turtles[
 ;     output-print replace-item 0 student-profile (random 9 + 1)
