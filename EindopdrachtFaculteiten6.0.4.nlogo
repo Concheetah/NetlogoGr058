@@ -58,17 +58,14 @@ to setup-faculteiten [num-faculteiten]
   ]
 end
 
+; creeren van de studenten profielen
 to setup-studenten
   create-turtles 300
   [
     set student-profile ["S" "T" "P"]
-    setxy random-xcor random-ycor
-    output-print map [a -> random 10] student-profile
+    set student-profile (map [a -> (random 9 + 1)] student-profile)
+    setxy random-xcor random-ycor                     ; dit moet nog aangepast worden
   ]
-;  ask turtles[
-;     output-print replace-item 0 student-profile (random 9 + 1)
-;     output-print replace-item 1 student-profile (random 9 + 1)
-;  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -107,7 +104,7 @@ end
 
 to test
 ;  test-faculties
-;  test-studenten
+  test-studenten
 end
 
 to test-faculties
@@ -128,6 +125,11 @@ to test-faculties
     output-print faculteit-profile
     output-print strategie]
 end
+
+to test-studenten
+  ask turtles [output-print student-profile]
+end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
