@@ -1,5 +1,5 @@
 patches-own[
-  faculteit ; a list of the faculteiten, in numbers
+  faculteit ; a list of the faculteiten
   faculteit-profile    ; a list of the faculty profile (S, T, P)
   faculteit-letter ; faculty name
   strategie ; voorlichtingsstrategie van de faculteit
@@ -17,10 +17,21 @@ globals [
 to setup
   clear-all
   setup-faculteiten 4
-  setup-studenten              ;; dit moet in go
+  setup-studenten
   test
-  reset-ticks
 end
+
+to go
+;    ask turtles [
+;    if (color = green)  [act-rationeel]
+;    if (color = red)    [act-feestbeest]
+;    if (color = blue)   [act-ambitieus]
+;    if (color = yellow) [act-snob]
+;  ]
+  tick
+end
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;; Faculteiten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -54,35 +65,30 @@ to setup-faculteiten [num-faculteiten]
   ask patches with [faculteit = 4][
     set faculteit-letter "D"
     set faculteit-profile [5 5 9]
-    set pcolor 84
     set strategie "honest"
+    set pcolor 84
   ]
-end
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-to go
-  ask turtles  [
-    move-students
-  ]
-  tick
 end
 
 to setup-studenten
-  ask n-of 300 patches with [faculteit-letter != 0][
-  sprout 1                                                     ;; dit is nu alleen voor het testen, zometeen moet het eruit gehaald worden en in 'go' gepropt worden.
+  create-turtles 300
   [
     set student-profile ["S" "T" "P"]
-    set student-profile (map [a -> (random 9 + 1)] student-profile)
-  ]
-  ]
-end
+    setxy random-xcor random-ycor
 
-; moving students around the faculty
-to move-students
-      ifelse [pcolor] of patch-ahead 1 = 6.5
-      [ lt random-float 360 ]   ;; We see a blue patch in front of us. Turn a random amount.
-      [ fd 1 ]                  ;; Otherwise, it is safe to move forward.
+   if (keuzestrategie = "Rationeel") [set color green]
+   if (keuzestrategie = "Feestbeest") [set color red]
+   if (keuzestrategie = "Ambitieus") [set color blue]
+   if (keuzestrategie = "Snob") [set color yellow]
+   if (keuzestrategie = "Mixed") [set color one-of [green red blue yellow]]
+
+    foreach student-profile [a -> set a (random 9 + 1)] ; hier moet iets veranderd worden
+    output-print student-profile
+  ]
+;  ask turtles[
+;     output-print replace-item 0 student-profile (random 9 + 1)
+;     output-print replace-item 1 student-profile (random 9 + 1)
+;  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -116,6 +122,21 @@ to-report calculate-faculteit-boundaries [ num-faculteits ]
 end
 
 
+;;;;;;;;;;;;;;;;;;;;   TURTLES PROCEDURES   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;to act-rationeel
+;end
+;
+;to act-feestbeest
+;end
+;
+;to act-ambitieus
+;end
+;
+;to act-snob
+;end
+
+
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
 
@@ -142,19 +163,15 @@ to test-faculties
     output-print faculteit-profile
     output-print strategie]
 end
-
-to test-studenten
-  ask turtles [output-print student-profile]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
-10
-647
-448
+23
+718
+434
 -1
 -1
-13.0
+12.2
 1
 10
 1
@@ -164,8 +181,8 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
+-20
+20
 -16
 16
 0
@@ -175,10 +192,10 @@ ticks
 30.0
 
 BUTTON
-57
-78
-120
-111
+10
+52
+73
+85
 NIL
 setup\n
 NIL
@@ -192,28 +209,65 @@ NIL
 1
 
 OUTPUT
-49
-135
-192
-334
+8
+143
+151
+342
 11
 
-BUTTON
-130
-78
-193
-111
-NIL
-go
-T
+CHOOSER
+8
+93
+146
+138
+keuzestrategie
+keuzestrategie
+"Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
+4
+
+MONITOR
+90
+371
+161
+416
+feestbeest
+count turtles with [color = red]
+17
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
+11
+
+MONITOR
+15
+371
+80
+416
+rationeel
+count turtles with [color = green]
+17
 1
+11
+
+MONITOR
+13
+425
+81
+470
+ambitieus
+count turtles with [color = blue]
+17
+1
+11
+
+MONITOR
+91
+426
+159
+471
+snob
+count turtles with [color = yellow]
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
