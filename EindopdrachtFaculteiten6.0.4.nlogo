@@ -69,9 +69,13 @@ to go
 end
 
 to setup-studenten
+  ; studenten worden nu random verdeeld over de faculteiten,
+  ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student
+  ; er moet ook nog iets gebeuren
   ask n-of 300 patches with [faculteit-letter != 0][
-  sprout 1                                                     ;; dit is nu alleen voor het testen, zometeen moet het eruit gehaald worden en in 'go' gepropt worden.
+  sprout 1
   [
+    ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)
   ]
@@ -80,9 +84,9 @@ end
 
 ; moving students around the faculty
 to move-students
-      ifelse [pcolor] of patch-ahead 1 = 6.5
+      ifelse [pcolor] of patch-ahead 2 = 6.5                                                  ;; dit moet nog iets worden met pxcor, pycor of faculteit-boundaries
       [ lt random-float 360 ]   ;; We see a blue patch in front of us. Turn a random amount.
-      [ fd 1 ]                  ;; Otherwise, it is safe to move forward.
+      [ fd 2 ]                  ;; Otherwise, it is safe to move forward.
 end
 
 to draw-faculteit-division [ x ]
