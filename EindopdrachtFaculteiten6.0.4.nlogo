@@ -62,31 +62,44 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
-  ask turtles  [
-    move-students
-  ]
+  ;one-day procedure:
+  ; move students
+  move-students
+  ; naar college gaan
+  ; vrienden maken
   tick
 end
 
 to setup-studenten
-  ; studenten worden nu random verdeeld over de faculteiten,
-  ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student
-  ; er moet ook nog iets gebeuren
+  ; studenten worden random verdeeld over de faculteiten
   ask n-of 300 patches with [faculteit-letter != 0][
   sprout 1
   [
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
-    set student-profile (map [a -> (random 9 + 1)] student-profile)
+    set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hier kan toekennen van de keuzestrategie van de student @Warsha  ?
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
+
   ]
   ]
+    ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
 
-; moving students around the faculty
+; studenten bewegen door de faculteit
 to move-students
-      ifelse [pcolor] of patch-ahead 2 = 6.5                                                  ;; dit moet nog iets worden met pxcor, pycor of faculteit-boundaries
-      [ lt random-float 360 ]   ;; We see a blue patch in front of us. Turn a random amount.
-      [ fd 2 ]                  ;; Otherwise, it is safe to move forward.
+  ; als de student de grens van de faculteit tegenkomt, draait hij/zij linksom random getal. [ aangepaste versie van de Look ahead example]
+      ask turtles [ifelse [pcolor] of patch-ahead 1 = 6.5
+      [ lt random-float 360 ]
+      [
+    ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
+    ;;;;;patch-here ;(reports patch) (turtle-related)
+   let s-faculteit (range 1 11 1)
+   let speed-student (range 1 2 0.1)
+   let index (position ([first faculteit-profile] of patch-here) s-faculteit)
+   fd (precision (item index speed-student) 1)
+  ]  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -125,7 +138,7 @@ end
 
 to test
 ;  test-faculties
-;  test-studenten
+ ; test-studenten
 end
 
 to test-faculties
@@ -210,6 +223,38 @@ BUTTON
 NIL
 go
 T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+213
+481
+385
+514
+snelheid
+snelheid
+1
+2
+1.0
+0.1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+72
+352
+147
+385
+go once
+go
+NIL
 1
 T
 OBSERVER
