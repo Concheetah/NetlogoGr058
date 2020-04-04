@@ -1,6 +1,9 @@
 patches-own[
   faculteit ; a list of the faculteiten, in numbers
   faculteit-profile    ; a list of the faculty profile (S, T, P)
+  faculteit-s
+  faculteit-p
+  faculteit-t
   faculteit-letter ; faculty name
   strategie ; voorlichtingsstrategie van de faculteit
 ]
@@ -62,7 +65,7 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
-  ;one-day procedure:
+  ; one-day procedure:
   ; move students
   move-students
   ; naar college gaan
@@ -75,6 +78,8 @@ to setup-studenten
   ask n-of 300 patches with [faculteit-letter != 0][
   sprout 1
   [
+
+    set shape "person"
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
@@ -90,16 +95,15 @@ end
 ; studenten bewegen door de faculteit
 to move-students
   ; als de student de grens van de faculteit tegenkomt, draait hij/zij linksom random getal. [ aangepaste versie van de Look ahead example]
-      ask turtles [ifelse [pcolor] of patch-ahead 1 = 6.5
+      ask turtles [ifelse [faculteit-letter] of patch-ahead 1 = 0
       [ lt random-float 360 ]
       [
-    ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
-    ;;;;;patch-here ;(reports patch) (turtle-related)
-   let s-faculteit (range 1 11 1)
-   let speed-student (range 1 2 0.1)
-   let index (position ([first faculteit-profile] of patch-here) s-faculteit)
-   fd (precision (item index speed-student) 1)
-  ]  ]
+      ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
+      let s-faculteit (range 1 11 1)
+      let speed-student (range 0 1 0.1)
+      let index (position first ([faculteit-profile] of patch-here) s-faculteit)
+      fd (precision (item index speed-student) 1)
+      ]  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -231,21 +235,6 @@ NIL
 NIL
 NIL
 1
-
-SLIDER
-213
-481
-385
-514
-snelheid
-snelheid
-1
-2
-1.0
-0.1
-1
-NIL
-HORIZONTAL
 
 BUTTON
 72
