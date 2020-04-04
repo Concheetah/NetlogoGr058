@@ -71,20 +71,26 @@ to setup-faculteiten [num-faculteiten]
 end
 
 to setup-studenten
-  create-turtles 300
-  [
-    set student-profile ["S" "T" "P"]
+   if (keuzestrategie = "Rationeel")
+  [create-turtles 300 [set color green]]
+  if (keuzestrategie = "Feestbeest")
+    [create-turtles 300 [set color red]]
+   if (keuzestrategie = "Ambitieus")
+    [create-turtles 300 [set color blue]]
+   if (keuzestrategie = "Snob")
+    [create-turtles 300 [set color yellow]]
+  if (keuzestrategie = "Mixed")
+   [ create-turtles 75 [set color green]
+    create-turtles 75 [set color red]
+    create-turtles 75 [set color blue]
+    create-turtles 75 [set color yellow]]
+
+  ask turtles
+  [set student-profile ["S" "T" "P"]
     setxy random-xcor random-ycor
 
-   if (keuzestrategie = "Rationeel") [set color green]
-   if (keuzestrategie = "Feestbeest") [set color red]
-   if (keuzestrategie = "Ambitieus") [set color blue]
-   if (keuzestrategie = "Snob") [set color yellow]
-   if (keuzestrategie = "Mixed") [set color one-of [green red blue yellow]]
-
     foreach student-profile [a -> set a (random 9 + 1)] ; hier moet iets veranderd worden
-    output-print student-profile
-  ]
+    output-print student-profile]
 ;  ask turtles[
 ;     output-print replace-item 0 student-profile (random 9 + 1)
 ;     output-print replace-item 1 student-profile (random 9 + 1)
