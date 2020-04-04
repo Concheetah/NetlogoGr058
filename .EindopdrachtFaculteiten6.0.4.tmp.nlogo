@@ -24,7 +24,8 @@ end
 
 ; kleine verandering hier
 to demotivational-text
-  show "You're not there yet"
+
+show "You're not there yet"
 end
 
 
