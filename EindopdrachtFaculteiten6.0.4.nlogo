@@ -199,12 +199,12 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
 
 end
 
-to basis-kans
-show count "T"
-count all turtles faculteit
-set average-score [all "T"/turtles]
-ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
-end
+;to basis-kans
+;show count "T"
+;count all turtles faculteit
+;set average-score [all "T"/turtles]
+;ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
+;end
 
 ;to te-veel-vrienden
 ;count friends
@@ -405,7 +405,7 @@ max-vrienden
 max-vrienden
 0
 60
-55.0
+0.0
 1
 1
 NIL
@@ -774,7 +774,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
