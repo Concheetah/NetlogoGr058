@@ -12,7 +12,8 @@
 
 
 ;; to college
-;;   [coming-college]
+;; set coming-to-college [kans? ((1 - te-veel-vrienden-factor) * basis-kans-factor)]
+;; end
 
 ;; to learn
 ;; ask turtle "T"
