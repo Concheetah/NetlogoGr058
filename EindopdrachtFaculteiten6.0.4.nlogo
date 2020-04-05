@@ -306,12 +306,12 @@ print learning-score
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
-;to doorstroom
-;show count turtles with [mood = happy][[learning-score = positief]
+;to pass to next year                                      ;; hier gaat nog iets mis
+;set doorstroom ( turtles with [happy][positief])
 ;end
 
 ;to rendement
-;set rendement [[doorstroom] / tot-students-faculteit]
+;set rendement (doorstroom / tot-students-faculteit)
 ;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; feedback procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
