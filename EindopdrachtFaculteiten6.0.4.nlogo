@@ -23,6 +23,10 @@ turtles-own[
   happiness ; hoe gelukkig de student is in het algemeen
   dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
   learnig-score ; totale learning-score
+  basis-kans-factor
+  te-veel-vrienden-factor
+  max-vrienden-happiness
+
 
 ]
 
@@ -255,9 +259,9 @@ end
 ;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
 ;end
 
-to learn
-  show count dl show count [((student-t + faculteit-t)/20)]
-end
+;to learn
+;show count dl = ((student-t + faculteit-t) / 20))
+;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
