@@ -5,16 +5,21 @@ patches-own[
   faculteit-p
   faculteit-t
   faculteit-letter ; faculty name
-  strategie ; voorlichtingsstrategie van de faculteit
+  strategie-faculteit ; voorlichtingsstrategie van de faculteit
 ]
 
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
+  student-s
+  student-t
+  student-p
+  strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
+  studenten-aantal     ; aantal studenten totaal
 ]
 
 to setup
@@ -40,83 +45,26 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "A"
     set faculteit-profile [8 2 2]
     set pcolor 14
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 2][
     set faculteit-letter "B"
     set faculteit-profile [2 8 3]
     set pcolor 34
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 3][
     set faculteit-letter "C"
     set faculteit-profile [2 8 8]
     set pcolor 44
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 4][
     set faculteit-letter "D"
     set faculteit-profile [5 5 9]
     set pcolor 84
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
-end
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-to go
-  ; one-day procedure:
-  ; move students
-  move-students
-  ; naar college gaan
-  ; vrienden maken
-  tick
-end
-
-to setup-studenten
-  ; studenten worden random verdeeld over de faculteiten
-  ask n-of 300 patches with [faculteit-letter != 0][
-  sprout 1
-  [
-    set shape "person"
-    ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
-    set student-profile ["S" "T" "P"]
-    set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hier kan toekennen van de keuzestrategie van de student @Warsha  ?
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
-      ifelse (keuzestrategie = "Rationeel")
-        [set color green][
-     ifelse (keuzestrategie = "Feestbeest")
-        [set color red][
-   ifelse (keuzestrategie = "Ambitieus")
-     [set color blue][
-   if (keuzestrategie = "Snob")
-     [set color yellow]
-;  if (keuzestrategie = "Mixed")
-;   [[set color green]
-;    [set color red]
-;    [set color blue]
-;    [set color yellow]]
-      ]]]]
-
-  ]
-
-    ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
-end
-
-; studenten bewegen door de faculteit
-to move-students
-  ; als de student de grens van de faculteit tegenkomt, draait hij/zij linksom random getal. [ aangepaste versie van de Look ahead example]
-      ask turtles [ifelse [faculteit-letter] of patch-ahead 1 = 0
-      [ lt random-float 360 ]
-      [
-      ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
-      let s-faculteit (range 1 11 1)
-      let speed-student (range 0 1 0.1)
-      let index (position first ([faculteit-profile] of patch-here) s-faculteit)
-      fd (precision (item index speed-student) 1)
-      ]  ]
 end
 
 to draw-faculteit-division [ x ]
@@ -149,6 +97,79 @@ to-report calculate-faculteit-boundaries [ num-faculteits ]
   report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to go
+  ; one-day procedure:
+  ; move students
+  move-students
+  ; naar college gaan
+  ; vrienden maken
+  tick
+end
+
+to setup-studenten
+  ; studenten worden random verdeeld over de faculteiten
+  set studenten-aantal 0
+  ask n-of 300 patches with [faculteit-letter != 0][
+  sprout 1
+  [
+    set studenten-aantal (studenten-aantal + 1)
+      set shape "person"
+    ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
+    set student-profile ["S" "T" "P"]
+    set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
+    keuzestrategie-student
+
+  ]]
+
+    ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
+end
+
+; studenten bewegen door de faculteit
+to move-students
+  ; als de student de grens van de faculteit tegenkomt, draait hij/zij linksom random getal. [ aangepaste versie van de Look ahead example]
+      ask turtles [ifelse [faculteit-letter] of patch-ahead 1 = 0
+      [ lt random-float 360 ]
+      [
+      ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
+      let s-faculteit (range 1 11 1)
+      let speed-student (range 0 1 0.1)
+      let index (position first ([faculteit-profile] of patch-here) s-faculteit)
+      fd (precision (item index speed-student) 1)
+      ]  ]
+end
+
+to keuzestrategie-student
+  ifelse (keuzestrategie = "Rationeel")
+        [set color green
+         set strategie-student "Rationeel"][
+     ifelse (keuzestrategie = "Feestbeest")
+        [set color red
+          set strategie-student "Feestbeest"][
+     ifelse (keuzestrategie = "Ambitieus")
+        [set color blue
+         set strategie-student "Ambitieus"][
+     ifelse (keuzestrategie = "Snob")
+        [set color yellow
+         ][
+     if (keuzestrategie = "Mixed")
+        [
+        ;75 studenten worden groen
+         if studenten-aantal <= 75 [set color green set strategie-student "Rationeel"]
+        ;75 studenten worden rood
+         if studenten-aantal <= 150 and studenten-aantal > 75 [set color red set strategie-student "Feestbeest"]
+        ;75 studenten worden blauw
+         if studenten-aantal <= 225 and studenten-aantal > 150 [set color blue set strategie-student "Ambitieus"]
+        ;75 studenten worden geel
+         if studenten-aantal <= 300 and studenten-aantal > 225 [set color yellow set strategie-student "Snob"]]
+    ]]]]
+end
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
@@ -162,19 +183,19 @@ to test-faculties
   ask one-of patches with [faculteit-letter = "A"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "B"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "C"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "D"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
 end
 
 to test-studenten
@@ -274,7 +295,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
+3
 
 @#$#@#$#@
 ## WHAT IS IT?
