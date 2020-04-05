@@ -21,12 +21,11 @@ turtles-own[
   happiness-T ; hoe gelukkig de student is academisch
   happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
   happiness ; hoe gelukkig de student is in het algemeen
-
-  learnig-score ; totale learning-score
-  basis-kans-factor
-  te-veel-vrienden-factor
-  max-vrienden-happiness
-
+  mood
+  happy
+  unhappy
+  positief
+  negatief
 
 ]
 
@@ -35,6 +34,12 @@ globals [
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
   dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
+  naar-college-gaan
+  learning-score ; totale learning-score
+  basis-kans-factor
+  te-veel-vrienden-factor
+  max-vrienden-happiness
+
 
 ]
 
@@ -274,7 +279,7 @@ show count vrienden
 end
 
 ;to learning-happy
-;ifelse student-t > 5 en faculteit-t > student-t [show count happiness-T [faculteit-t / 5 - 0.5]][count happiness-T [ facultiet-t /10 * 0.5]]
+;ifelse student-t > 5 en faculteit-t > student-t [show count happiness-T [faculteit-t / 5 - 0.5]][count happiness-T [ faculteit-t /10 * 0.5]]
 ;end
 
 ;to prestige-happy
@@ -287,18 +292,19 @@ end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;to be-happy
-;ifelse happiness >= unhappiness [happy][unhappy]
-;end
+to be-happy
+ifelse happiness >= unhappiness [set mood happy][set mood unhappy]
+end
 
-;to be-positief
-;show count naar-college-gaan                                     ;; check of het lukt om alle keren te tellen dat student naar college gaat met de code
-;show count learning-score [dl * naar-college-komen]
-;ifelse learnig-score >= learning-score-min [positief][negatief]   ;; learning-score defined
-;end
+to be-positief
+show count naar-college-gaan                                     ;; check of het lukt om alle keren te tellen dat student naar college gaat met de code
+set learning-score (dl * naar-college-gaan)
+print learning-score
+ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
+end
 
 ;to doorstroom
-;show count turtles with [happy][[positief]
+;show count turtles with [mood = happy][[learning-score = positief]
 ;end
 
 ;to rendement
