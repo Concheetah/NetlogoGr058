@@ -125,20 +125,21 @@ to setup-studenten
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-    set student-s first student-profile
+    set student-s (item 0 student-profile)
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
     set vrienden []
     set max-vrienden-bereikt? false
       set student-faculteit ([faculteit-letter] of patch-here)
+      ;   if (keuzestrategie = "Rationeel") [move-to ]
+  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
+  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
+  if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
+    ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
   ]]
 
-;   if (keuzestrategie = "Rationeel") [move-to ]
-  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches [max item 0 faculteit-profile]]
-  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches [max item 1 faculteit-profile]]
-  if (keuzestrategie = "Snob") [move-to max-one-of patches [max item 2 faculteit-profile]]
-    ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
+
 end
 
 ; studenten bewegen door de faculteit
