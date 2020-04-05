@@ -1,3 +1,15 @@
+;; to chance
+;; count all "T" faculteit
+;; count all turtles faculteit
+;; set average-score [all "T"/turtles]
+;; if average-score >= "T"
+;; count kans-basis-factor [1 - ((average-score - "T" )/10)]
+;; if else count kans-basic [1 - (("T" - average-score)/10)]
+;; end
+
+;; to much friends
+;;
+
 ;; to college
 ;; if ... [coming-college]
 
@@ -35,7 +47,7 @@
 ;; end
 
 ;; to next year part 1
-;; if happiness > happiness-score-min [true]
+;; if happiness >= happiness-score-min [true]
 ;; ifelse unhappy [false]
 ;; end
 
