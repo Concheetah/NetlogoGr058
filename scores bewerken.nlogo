@@ -2,16 +2,17 @@
 ;; count all "T" faculteit
 ;; count all turtles faculteit
 ;; set average-score [all "T"/turtles]
-;; if average-score >= "T"
-;; count kans-basis-factor [1 - ((average-score - "T" )/10)]
-;; if else count kans-basic [1 - (("T" - average-score)/10)]
+;; ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
 ;; end
 
 ;; to much friends
-;;
+;; count friends
+;; ifelse friends >= max-friends [set te-veel-vrienden-factor 1][count te-veel-vrienden-factor friends/max-friends]
+;; end
+
 
 ;; to college
-;; if ... [coming-college]
+;;   [coming-college]
 
 ;; to learn
 ;; ask turtle "T"
@@ -47,8 +48,7 @@
 ;; end
 
 ;; to next year part 1
-;; if happiness >= happiness-score-min [true]
-;; ifelse unhappy [false]
+;; ifelse happiness >= happiness-score-min [happy][unhappy]
 ;; end
 
 ;; to next year part 2
@@ -112,6 +112,21 @@ Learning-score-min
 0
 20
 20.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+19
+121
+191
+154
+max-friends
+max-friends
+0
+100
+50.0
 1
 1
 NIL
