@@ -1,5 +1,5 @@
 ;; to college
-;; if
+;; if ... [coming-college]
 
 ;; to learn
 ;; ask turtle "T"
