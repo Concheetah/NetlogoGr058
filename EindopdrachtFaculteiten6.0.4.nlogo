@@ -264,7 +264,7 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
       ]
     ]
   ]
- set gem-aantal-vrienden-A (aantal-vrienden-A / tot-aantal-studenten-A)
+ set gem-aantal-vrienden-A ((aantal-vrienden-A  / 2) / tot-aantal-studenten-A)
 
 ; vrienden maken faculteit B
    if gem-aantal-vrienden-B < 60[
@@ -283,7 +283,7 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
       ]
     ]
   ]
- set gem-aantal-vrienden-B (aantal-vrienden-B / tot-aantal-studenten-B)
+ set gem-aantal-vrienden-B ((aantal-vrienden-B / 2) / tot-aantal-studenten-B)
 
 ; vrienden maken faculteit C
   if gem-aantal-vrienden-C < 60[
@@ -291,7 +291,7 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
        let potentiele-vriend one-of other turtles-here
        if potentiele-vriend != nobody[
         ask potentiele-vriend[set pvriend-s student-s]]
-       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       let vrienden-kans (((student-s * 10 ) + (pvriend-s * 10)) / 2 )
        if random 100 < vrienden-kans[
        set vrienden (fput potentiele-vriend vrienden)
       ]
@@ -302,7 +302,7 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
       ]
     ]
   ]
- set gem-aantal-vrienden-C (aantal-vrienden-C / tot-aantal-studenten-C)
+ set gem-aantal-vrienden-C ((aantal-vrienden-C / 2) / tot-aantal-studenten-C)
 
 ; vrienden maken faculteit D
   if gem-aantal-vrienden-D < 60[
@@ -321,29 +321,7 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
       ]
     ]
   ]
- set gem-aantal-vrienden-D (aantal-vrienden-D / tot-aantal-studenten-D)
-;    ask turtles with [faculteit-letter = "B"] [
-;    if empty? vrienden = false[
-;      set aantal-vrienden-ps length vrienden
-;      set aantal-vrienden-B (aantal-vrienden-ps + aantal-vrienden-B)
-;  ]]
-;    set gem-aantal-vrienden-B (aantal-vrienden-B / tot-aantal-studenten-B)
-;    ask turtles with [faculteit-letter = "C"] [
-;    if empty? vrienden = false[
-;      set aantal-vrienden-ps length vrienden
-;      set aantal-vrienden-C (aantal-vrienden-ps + aantal-vrienden-C)
-;  ]]
-;  set gem-aantal-vrienden-C (aantal-vrienden-C / tot-aantal-studenten-C)
-;    ask turtles with [faculteit-letter = "D"] [
-;    if empty? vrienden = false[
-;      set aantal-vrienden-ps length vrienden
-;      set aantal-vrienden-D (aantal-vrienden-ps + aantal-vrienden-D)
-;  ]]
-;    set gem-aantal-vrienden-D (aantal-vrienden-D / tot-aantal-studenten-D)
-;  ]
-
-
-
+ set gem-aantal-vrienden-D ((aantal-vrienden-D / 2) / tot-aantal-studenten-D)
 
 end
 
@@ -550,7 +528,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-2
+1
 
 SLIDER
 889
@@ -596,6 +574,27 @@ learning-score-min
 1
 NIL
 HORIZONTAL
+
+PLOT
+805
+399
+1005
+549
+gemiddelde aantal vrienden
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"Faculteit A" 1.0 0 -5298144 true "" "plot gem-aantal-vrienden-A"
+"Faculteit B" 1.0 0 -8431303 true "" "plot gem-aantal-vrienden-B"
+"Faculteit C" 1.0 0 -4079321 true "" "plot gem-aantal-vrienden-C"
+"Faculteit D" 1.0 0 -12345184 true "" "plot gem-aantal-vrienden-D"
 
 @#$#@#$#@
 ## WHAT IS IT?
