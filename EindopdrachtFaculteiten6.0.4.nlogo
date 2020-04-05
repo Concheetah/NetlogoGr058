@@ -6,6 +6,9 @@ patches-own[
   faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
   faculteit-letter ; faculty name
   strategie-faculteit ; voorlichtingsstrategie van de faculteit
+  strategie-faculteit-s ; hoe sociaal de faculteit lijkt te zijn
+  strategie-faculteit-p ; hoeveel prestige de faculteit lijkt te hebben
+  strategie-faculteit-t ; hoe hoog het technische/beta gehalte van de faculteit lijkt te zijn
 ]
 
 turtles-own[
@@ -46,6 +49,7 @@ globals [
   max-vrienden-happiness
   doorstroom
   verschil-tot ; totale verschil = verschil-s + verschil-t + verschil-p
+  jaar-twee ; true/false
 
 ]
 
@@ -234,15 +238,15 @@ to keuzestrategie-student
 end
 
 to sort-s
-  ifelse faculteit-s >= student-s [ set verschil-s (faculteit-s - student-s)][set verschil-s (student-s - faculteit-s)]
+  ifelse strategie-faculteit-s >= student-s [ set verschil-s (strategie-faculteit-s - student-s)][set verschil-s (student-s - strategie-faculteit-s)]
 end
 
 to sort-t
-  ifelse faculteit-t >= student-t [ set verschil-t (faculteit-t - student-t)][set verschil-t (student-t - faculteit-t)]
+  ifelse strategie-faculteit-t >= student-t [ set verschil-t (strategie-faculteit-t - student-t)][set verschil-t (student-t - strategie-faculteit-t)]
 end
 
 to sort-p
-  ifelse faculteit-p >= student-p [ set verschil-p (faculteit-p - student-p)][set verschil-p (student-p - faculteit-p)]
+  ifelse strategie-faculteit-p >= student-p [ set verschil-p (strategie-faculteit-p - student-p)][set verschil-p (student-p - strategie-faculteit-p)]
 end
 
 to divide
@@ -330,9 +334,11 @@ print learning-score
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
-;to pass-year                                      ;; hier gaat nog iets mis
-;  ifelse turtle show count turtles with happy and positief [doorstoom]
-;end
+to pass-year
+  if mood = happy and learning-score = positief [set jaar-twee [true]]
+  show count turtles with [jaar-twee = true]
+end
+
 
 ;to rendement
 ;set rendement (doorstroom / tot-students-faculteit)
