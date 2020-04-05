@@ -17,6 +17,11 @@ turtles-own[
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
   student-faculteit
+  happiness-S ; hoe gelukkig de student is in sociaal opzicht
+  happiness-T ; hoe gelukkig de student is academisch
+  happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
+  happiness ; hoe gelukkig de student is in het algemeen
+
 ]
 
 globals [
@@ -231,10 +236,10 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
 end
 
 ;to basis-kans-factor
-;show count "T" faculteit                         ;; zegt dat "T" een string is inpl. van input
+;show count totale student-t                 ;; zegt dat "T" een string is inpl. van input
 ;show count turtles faculteit
-;set average-score [ "T"/ turtles]
-;ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
+;set average-score [ totale student-t / turtles]
+;ifelse average-score >= student-t  [count basis-kans-factor 1 - ((average-score - student-t )/10)][count basis-kans-factor 1 - ((student-t - average-score)/10)]
 ;end
 
 to te-veel-vrienden-factor
@@ -248,30 +253,27 @@ end
 ;end
 
 ;to learn
-;ask turtle "T"
+;ask student-t
 ;ask patches T
-;show count dl [(turtle "T" + patches T)/20]
+;show count dl [(student-t + patches T)/20]
 ;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to happiness-S
-;ask turtle "S"
+to social-happy
 show count vrienden
-;set max-vrienden-happiness [("S" * 6)]
+;set max-vrienden-happiness [(student-s * 6)]
 ;set happiness-S [ (vrienden / max-vrienden-happiness)]
 end
 
-;to happiness-T
-;ask turtle "T"
+;to learning-happy
 ;ask patches T
-;ifelse turtle "T" > 5 en patchesT > "T" [show count happiness-T [patchesT / 5 - 0.5]][count happiness-T [ patchesT /10 * 0.5]]
+;ifelse student-t > 5 en patchesT > student-t [show count happiness-T [patchesT / 5 - 0.5]][count happiness-T [ patchesT /10 * 0.5]]
 ;end
 
-;to happiness-P
-;ask turtle "P"
+;to prestige-happy
 ;ask patches p
-;show count happiness-P [("P" + patches P) / 20]
+;show count happiness-P [(student-p + patches P) / 20]
 ;end
 
 ;to happiness
