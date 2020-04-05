@@ -41,6 +41,7 @@ globals [
   basis-kans-factor
   te-veel-vrienden-factor
   max-vrienden-happiness
+  doorstroom
 
 
 
@@ -306,9 +307,9 @@ print learning-score
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
-;to pass to next year                                      ;; hier gaat nog iets mis
-;set doorstroom ( turtles with [happy][positief])
-;end
+to pass-year                                      ;; hier gaat nog iets mis
+show count turtles with [happy = true] and [learningscore = positief]
+end
 
 ;to rendement
 ;set rendement (doorstroom / tot-students-faculteit)
