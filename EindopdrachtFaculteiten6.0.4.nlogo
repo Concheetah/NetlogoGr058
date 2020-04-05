@@ -89,16 +89,17 @@ to setup-studenten
         [set color green][
      ifelse (keuzestrategie = "Feestbeest")
         [set color red][
-   ifelse (keuzestrategie = "Ambitieus")
-     [set color blue][
-   if (keuzestrategie = "Snob")
-     [set color yellow]
-;  if (keuzestrategie = "Mixed")
-;   [[set color green]
-;    [set color red]
-;    [set color blue]
-;    [set color yellow]]
-      ]]]]
+     ifelse (keuzestrategie = "Ambitieus")
+        [set color blue][
+     ifelse (keuzestrategie = "Snob")
+        [set color yellow][
+     if (keuzestrategie = "Mixed")
+        [let keuze-kans random 100
+        if keuze-kans < 25 [set color green]
+        if keuze-kans < 50 and keuze-kans >= 25  [set color red]
+        if keuze-kans < 75 and keuze-kans >= 50  [set color blue]
+        if keuze-kans < 100 and keuze-kans >= 75 [set color yellow]]
+    ]]]]]
 
   ]
 
