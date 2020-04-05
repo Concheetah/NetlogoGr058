@@ -1,183 +1,46 @@
-patches-own[
-  faculteit ; a list of the faculteiten
-  faculteit-profile    ; a list of the faculty profile (S, T, P)
-  faculteit-letter ; faculty name
-  strategie ; voorlichtingsstrategie van de faculteit
-]
+;; to learn
+;; ask turtle "T"
+;; ask patches T
+;; set dl
+;; count dl [(turtle "T" + patches T)/20]
+;; end
 
-turtles-own[
-  student-profile ; a list of the students profile (S, T, P)
-]
+;; to
 
-globals [
-  faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
-  faculteit-letters    ; a list of the faculty letters
-]
+;; to happiness-S
+;; ask turtle "S"
+;; count friends
+;; count max-friends [ "S" * 6]
+;; set happiness-S
+;; count friends/max-friends
+;; end
 
-to setup
-  clear-all
-  setup-faculteiten 4
-  setup-studenten
-  test
-end
+;; to happiness-T
+;; ask turtle "T"
+;; ask patches T
+;; if turtle "T">5 en patchesT>"T" [0.5 <happiness-T < 1]
+;; count happiness-T [patchesT/5-0.5]
+;; ifelse
+;; count happiness-T [ patchesT/10*0.5]
+;; end
 
-to go
-;    ask turtles [
-;    if (color = green)  [act-rationeel]
-;    if (color = red)    [act-feestbeest]
-;    if (color = blue)   [act-ambitieus]
-;    if (color = yellow) [act-snob]
-;  ]
-  tick
-end
+;; to happiness-P
+;; ask turtle "P"
+;; ask patches p
+;; count happiness-P [("P"+ patches P)/20]
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;; Faculteiten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-to setup-faculteiten [num-faculteiten]
-  foreach faculteiten-divisions num-faculteiten draw-faculteit-division
-  set faculteit-boundaries calculate-faculteit-boundaries num-faculteiten
-  let faculteit-numbers (range 1 (num-faculteiten + 1))
-  (foreach faculteit-boundaries faculteit-numbers [ [boundaries faculteit-number] ->
-    ask patches with [ pxcor >= first boundaries and pxcor <= last boundaries ] [
-      set faculteit faculteit-number
-    ]
-  ])
-  ask patches with [faculteit = 1][
-    set faculteit-letter "A"
-    set faculteit-profile [8 2 2]
-    set pcolor 14
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 2][
-    set faculteit-letter "B"
-    set faculteit-profile [2 8 3]
-    set pcolor 34
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 3][
-    set faculteit-letter "C"
-    set faculteit-profile [2 8 8]
-    set pcolor 44
-    set strategie "honest"
-  ]
-  ask patches with [faculteit = 4][
-    set faculteit-letter "D"
-    set faculteit-profile [5 5 9]
-    set strategie "honest"
-    set pcolor 84
-  ]
-end
-
-to setup-studenten
-   if (keuzestrategie = "Rationeel")
-  [create-turtles 300 [set color green]]
-  if (keuzestrategie = "Feestbeest")
-    [create-turtles 300 [set color red]]
-   if (keuzestrategie = "Ambitieus")
-    [create-turtles 300 [set color blue]]
-   if (keuzestrategie = "Snob")
-    [create-turtles 300 [set color yellow]]
-  if (keuzestrategie = "Mixed")
-   [ create-turtles 75 [set color green]
-    create-turtles 75 [set color red]
-    create-turtles 75 [set color blue]
-    create-turtles 75 [set color yellow]]
-
-  ask turtles
-  [set student-profile ["S" "T" "P"]
-    setxy random-xcor random-ycor
-
-    foreach student-profile [a -> set a (random 9 + 1)] ; hier moet iets veranderd worden
-    output-print student-profile]
-;  ask turtles[
-;     output-print replace-item 0 student-profile (random 9 + 1)
-;     output-print replace-item 1 student-profile (random 9 + 1)
-;  ]
-end
-
-to draw-faculteit-division [ x ]
-  ask patches with [ pxcor = x ] [
-    set pcolor grey + 1.5
-  ]
-  create-turtles 1 [
-    ; use a temporary turtle to draw a line in the middle of our division
-    setxy x max-pycor + 0.5
-    set heading 0
-    set color grey - 3
-    pen-down
-    forward world-height
-    set xcor xcor + 1 / patch-size
-    right 180
-    set color grey + 3
-    forward world-height
-    die ; our turtle has done its job and is no longer needed
-  ]
-end
-
-to-report faculteiten-divisions [ num-faculteits ]
-  report n-values (num-faculteits + 1) [ n ->
-    [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-faculteits))) 0
-  ]
-end
-
-to-report calculate-faculteit-boundaries [ num-faculteits ]
-  let divisions faculteiten-divisions num-faculteits
-  report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
-end
-
-
-;;;;;;;;;;;;;;;;;;;;   TURTLES PROCEDURES   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;to act-rationeel
-;end
-;
-;to act-feestbeest
-;end
-;
-;to act-ambitieus
-;end
-;
-;to act-snob
-;end
-
-
-;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; here are all the test functions for checking the behavior of the model thusfar
-
-to test
-;  test-faculties
-;  test-studenten
-end
-
-to test-faculties
-  ask one-of patches with [faculteit-letter = "A"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-  ask one-of patches with [faculteit-letter = "B"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-  ask one-of patches with [faculteit-letter = "C"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-  ask one-of patches with [faculteit-letter = "D"] [
-    output-print faculteit-letter
-    output-print faculteit-profile
-    output-print strategie]
-end
+;; to happiness
+;; count happiness [(happiness-S + happiness-T + happiness-P)/3]
+;; end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
-23
-718
-434
+10
+647
+448
 -1
 -1
-12.2
+13.0
 1
 10
 1
@@ -187,8 +50,8 @@ GRAPHICS-WINDOW
 1
 1
 1
--20
-20
+-16
+16
 -16
 16
 0
@@ -196,94 +59,6 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
-
-BUTTON
-10
-52
-73
-85
-NIL
-setup\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-OUTPUT
-8
-143
-151
-342
-11
-
-CHOOSER
-8
-93
-146
-138
-keuzestrategie
-keuzestrategie
-"Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-0
-
-MONITOR
-90
-371
-161
-416
-feestbeest
-count turtles with [color = red]
-17
-1
-11
-
-MONITOR
-14
-409
-79
-454
-rationeel
-count turtles with [color = green]
-17
-1
-11
-
-MONITOR
-12
-463
-80
-508
-ambitieus
-count turtles with [color = blue]
-17
-1
-11
-
-MONITOR
-90
-464
-158
-509
-snob
-count turtles with [color = yellow]
-17
-1
-11
-
-CHOOSER
-6
-353
-195
-398
-feedbackmechanisme
-feedbackmechanisme
-"Geen feedback" "Rendement-gebaseerd" "Random"
-0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -300,7 +75,7 @@ feedbackmechanisme
 
 ## THINGS TO NOTICE
 
-Parts of the code are copied of Many Regions Example.
+(suggested things for the user to notice while running the model)
 
 ## THINGS TO TRY
 
@@ -627,7 +402,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
