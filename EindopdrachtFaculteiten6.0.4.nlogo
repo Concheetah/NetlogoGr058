@@ -281,7 +281,7 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;to be-happy
-;ifelse happiness >= happiness-score-min [happy][unhappy]    ;; happiness defined
+;ifelse happiness >= unhappiness [happy][unhappy]    ;; happiness defined
 ;end
 
 ;to be-positief
@@ -480,6 +480,36 @@ max-friends
 0
 100
 50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+888
+168
+1060
+201
+unhappiness
+unhappiness
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+889
+218
+1061
+251
+learning-score-min
+learning-score-min
+0
+20
+10.0
 1
 1
 NIL
