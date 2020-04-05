@@ -1,11 +1,12 @@
+;; to college
+;; if
+
 ;; to learn
 ;; ask turtle "T"
 ;; ask patches T
 ;; set dl
 ;; count dl [(turtle "T" + patches T)/20]
 ;; end
-
-;; to
 
 ;; to happiness-S
 ;; ask turtle "S"
@@ -30,8 +31,22 @@
 ;; count happiness-P [("P"+ patches P)/20]
 
 ;; to happiness
-;; count happiness [(happiness-S + happiness-T + happiness-P)/3]
+;; count happiness [(happiness-S + happiness-T + happiness-P)/3] * 100
 ;; end
+
+;; to next year part 1
+;; if happiness > happiness-score-min [true]
+;; ifelse unhappy [false]
+;; end
+
+;; to next year part 2
+;; count coming-college
+;; count learning-score [dl * coming-college]
+
+;;
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
