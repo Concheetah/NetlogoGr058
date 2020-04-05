@@ -116,7 +116,7 @@ to-report calculate-faculteit-boundaries [ num-faculteits ]
   let divisions faculteiten-divisions num-faculteits
   report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
 end
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
@@ -209,6 +209,8 @@ to keuzestrategie-student
     ]]]]
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 to vrienden-maken
 ;vraag studenten of ze nog vrienden kunnen maken
 ;max-aantal-vrienden bereikt?
@@ -227,6 +229,35 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
   ]
 
 end
+
+;to basis-kans-factor
+;show count "T" faculteit                         ;; zegt dat "T" een string is inpl. van input
+;show count turtles faculteit
+;set average-score [ "T"/ turtles]
+;ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
+;end
+
+;to te-veel-vrienden-factor
+;show count vrienden
+;ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
+;  [ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
+;end
+
+;to naar-college-gaan
+;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
+;end
+
+;to learn
+;turtle "T"
+;ask patches T
+;show count dl [(turtle "T" + patches T)/20]
+;end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
@@ -394,6 +425,21 @@ PENS
 "pen-2" 1.0 0 -8431303 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"B\"]"
 "pen-3" 1.0 0 -4079321 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"C\"]"
 "pen-4" 1.0 0 -12345184 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"D\"]"
+
+SLIDER
+889
+122
+1061
+155
+max-friends
+max-friends
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -737,7 +783,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
