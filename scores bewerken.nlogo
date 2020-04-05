@@ -60,6 +60,36 @@ GRAPHICS-WINDOW
 ticks
 30.0
 
+SLIDER
+20
+27
+192
+60
+Happiness
+Happiness
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+17
+74
+189
+107
+Learning-score-min
+Learning-score-min
+0
+20
+20.0
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
