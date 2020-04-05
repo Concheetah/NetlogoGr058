@@ -78,7 +78,6 @@ to setup-studenten
   ask n-of 300 patches with [faculteit-letter != 0][
   sprout 1
   [
-
     set shape "person"
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
@@ -86,9 +85,23 @@ to setup-studenten
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hier kan toekennen van de keuzestrategie van de student @Warsha  ?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
+      ifelse (keuzestrategie = "Rationeel")
+        [set color green][
+     ifelse (keuzestrategie = "Feestbeest")
+        [set color red][
+   ifelse (keuzestrategie = "Ambitieus")
+     [set color blue][
+   if (keuzestrategie = "Snob")
+     [set color yellow]
+;  if (keuzestrategie = "Mixed")
+;   [[set color green]
+;    [set color red]
+;    [set color blue]
+;    [set color yellow]]
+      ]]]]
 
   ]
-  ]
+
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
 
@@ -252,6 +265,16 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+699
+33
+837
+78
+keuzestrategie
+keuzestrategie
+"Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
+4
 
 @#$#@#$#@
 ## WHAT IS IT?
