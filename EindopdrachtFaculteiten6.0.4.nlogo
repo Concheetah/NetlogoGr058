@@ -30,7 +30,7 @@ to setup
   setup-faculteiten 4
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
   ;test
-  nieuwe-strategie
+;  nieuwe-strategie
   show "hello"
   reset-ticks
 end
@@ -87,8 +87,133 @@ end
 
 to nieuwe-strategie
   if (feedbackmechanisme = "Geen feedback") [print "Voorlichtingsstrategie blijft onveranderd."]
-  if (feedbackmechanisme = "Rendement-gebaseerd") [ ]
-  if (feedbackmechanisme = "Random") [ ]
+  if (feedbackmechanisme = "Rendement-gebaseerd") [rendement-verhogen]
+  if (feedbackmechanisme = "Random") [];hier iets dat er random wordt gekozen uit alle strategieën
+end
+
+to rendement-verhogen
+  ask patches with [faculteit = 1][
+  ifelse (rendement > min-rendement)
+  [strategie-ongewijzigd]
+  [ifelse (unhappy > negatief]
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 2][
+  ifelse (rendement > min-rendement)
+  [strategie-ongewijzigd]
+  [ifelse (unhappy > negatief]
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 3][
+  ifelse (rendement > min-rendement)
+  [strategie-ongewijzigd]
+  [ifelse (unhappy > negatief]
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 4][
+  ifelse (rendement > min-rendement)
+  [strategie-ongewijzigd]
+  [ifelse (unhappy > negatief]
+    [strat-S-]
+    [strat-T+]]
+end
+
+
+to strategie-ongewijzigd
+print "Voorlichtingsstrategie blijft onveranderd."
+end
+
+to honest
+   ask patches with [faculteit = 1][   ;faculteit A
+    set faculteit-letter "A"
+    set faculteit-profile [8 2 2]]
+  ask patches with [faculteit = 2][    ;faculteit B
+    set faculteit-letter "B"
+    set faculteit-profile [2 8 3]]
+  ask patches with [faculteit = 3][    ;faculteit C
+    set faculteit-letter "C"
+    set faculteit-profile [2 8 8]]
+  ask patches with [faculteit = 4][    ;faculteit D
+    set faculteit-letter "D"
+    set faculteit-profile [5 5 9]]
+end
+
+to S+
+ set faculteit-s (item 0 faculteit-profile) + 1
+ set strategie-faculteit "S+"
+end
+
+to S-
+  set faculteit-s (item 0 faculteit-profile) - 1
+  set strategie-faculteit "S-"
+end
+
+to max-S
+  set faculteit-s [10]
+  set strategie-faculteit "max-S"
+end
+
+to strat-S+
+  set faculteit-s (item 0 faculteit-profile) + 1
+  set strategie-faculteit "strat-S+"
+end
+
+to strat-S-
+  set faculteit-s (item 0 faculteit-profile) - 1
+  set strategie-faculteit "strat-S-"
+end
+
+to T+
+  set faculteit-t (item 1 faculteit-profile) + 1
+  set strategie-faculteit "T+"
+end
+
+to T-
+  set faculteit-t (item 1 faculteit-profile) - 1
+  set strategie-faculteit "T-"
+end
+
+to max-T
+  set faculteit-s [10]
+  set strategie-faculteit "max-T"
+end
+
+to strat-T+
+  set faculteit-t (item 1 faculteit-profile) + 1
+  set strategie-faculteit "strat-T+"
+end
+
+to strat-T-
+  set faculteit-t (item 1 faculteit-profile) - 1
+  set strategie-faculteit "strat-T-"
+end
+
+to P+
+  set faculteit-p (item 2 faculteit-profile) + 1
+  set strategie-faculteit "P+"
+end
+
+to P-
+  set faculteit-p (item 2 faculteit-profile) - 1
+  set strategie-faculteit "P-"
+end
+
+to max-P
+  set faculteit-s [10]
+  set strategie-faculteit "max-P"
+end
+
+to strat-P+
+  set faculteit-p (item 2 faculteit-profile) + 1
+  set strategie-faculteit "strat-P+"
+end
+
+to strat-P-
+  set faculteit-p (item 2 faculteit-profile) - 1
+  set strategie-faculteit "strat-P-"
 end
 
 ; many regions example
@@ -216,7 +341,7 @@ to keuzestrategie-student
     ]]]]
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; one-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken
 ;vraag studenten of ze nog vrienden kunnen maken
@@ -457,6 +582,21 @@ feedbackmechanisme
 feedbackmechanisme
 "Geen feedback" "Rendement-gebaseerd" "Random"
 0
+
+SLIDER
+666
+108
+841
+141
+min-rendement
+min-rendement
+0
+100
+50.0
+1
+1
+%
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
