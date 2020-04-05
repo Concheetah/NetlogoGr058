@@ -13,19 +13,22 @@ turtles-own[
   student-s
   student-t
   student-p
+  vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
+  max-aantal-vrienden? ; true/false
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+  max-vrienden ; maximale aantal vrienden dat een student kan hebben (slider)
 ]
 
 to setup
   clear-all
   setup-faculteiten 4
-  setup-studenten              ;; dit moet in go
+  setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
   test
   reset-ticks
 end
@@ -108,6 +111,8 @@ to go
   tick
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; studenten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 to setup-studenten
   ; studenten worden random verdeeld over de faculteiten
   set studenten-aantal 0
@@ -115,14 +120,14 @@ to setup-studenten
   sprout 1
   [
     set studenten-aantal (studenten-aantal + 1)
-      set shape "person"
+    set shape "person"
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
-
+    set vrienden [nobody]
   ]]
 
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
@@ -168,8 +173,12 @@ to keuzestrategie-student
     ]]]]
 end
 
-
-
+;to vrienden-maken
+;vraag studenten of ze nog vrienden kunnen maken
+;max-aantal-vrienden bereikt? if (vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? false])
+;voeg student toe aan beide vriendenlijsten
+;round( (S-waarde student/10) * (S-waarde andere student/10) ) = 1 is vrienden / 0 is geen vrienden
+;end
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
