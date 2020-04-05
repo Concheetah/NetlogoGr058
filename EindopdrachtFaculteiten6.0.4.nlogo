@@ -159,6 +159,10 @@ to setup-studenten
     set vrienden []
     set max-vrienden-bereikt? false
     set student-faculteit ([faculteit-letter] of patch-here)
+   ;   if (keuzestrategie = "Rationeel") [move-to ]
+  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
+  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
+  if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
