@@ -21,7 +21,8 @@ turtles-own[
   happiness-T ; hoe gelukkig de student is academisch
   happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
   happiness ; hoe gelukkig de student is in het algemeen
-  dl ; learning-score, die student krijgt per keer dat hij/zij naar college gaat
+  dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
+  learnig-score ; totale learning-score
 
 ]
 
@@ -273,14 +274,14 @@ end
 ;show count happiness-P [(student-p + faculteit-p) / 20]
 ;end
 
-;to happiness
-;show count happiness [(happiness-S + happiness-T + happiness-P) / 3] * 100      ;; achter count moet een agentset
+;to happy-overall
+;show count happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
 ;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;to be-happy
-;ifelse happiness >= unhappiness [happy][unhappy]    ;; happiness defined
+;ifelse happiness >= unhappiness [happy][unhappy]
 ;end
 
 ;to be-positief
