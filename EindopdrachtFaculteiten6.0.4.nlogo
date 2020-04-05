@@ -30,6 +30,7 @@ to setup
   setup-faculteiten 4
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
   ;test
+  nieuwe-strategie
   show "hello"
   reset-ticks
 end
@@ -82,6 +83,12 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
   ]
+end
+
+to nieuwe-strategie
+  if (feedbackmechanisme = "Geen feedback") [print "Voorlichtingsstrategie blijft onveranderd."]
+  if (feedbackmechanisme = "Rendement-gebaseerd") [ ]
+  if (feedbackmechanisme = "Random") [ ]
 end
 
 ; many regions example
@@ -159,10 +166,10 @@ to setup-studenten
     set vrienden []
     set max-vrienden-bereikt? false
     set student-faculteit ([faculteit-letter] of patch-here)
-   ;   if (keuzestrategie = "Rationeel") [move-to ]
-  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
-  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
-  if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
+   ;   if (color = green) [move-to ]
+  if (color = red) [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
+  if (color = blue) [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
+  if (color = yellow) [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
@@ -323,10 +330,10 @@ ticks
 30.0
 
 BUTTON
-57
-78
-120
-111
+3
+34
+66
+67
 NIL
 setup\n
 NIL
@@ -340,17 +347,17 @@ NIL
 1
 
 OUTPUT
-49
-135
-192
-334
+27
+87
+170
+286
 11
 
 BUTTON
-130
-78
-193
-111
+69
+34
+132
+67
 NIL
 go
 T
@@ -364,10 +371,10 @@ NIL
 1
 
 BUTTON
-72
-352
-147
-385
+135
+34
+205
+67
 go once
 go
 NIL
@@ -381,20 +388,20 @@ NIL
 1
 
 CHOOSER
-699
-33
-837
-78
+12
+303
+150
+348
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
 4
 
 SLIDER
-67
-497
-239
-530
+8
+359
+180
+392
 max-vrienden
 max-vrienden
 0
@@ -406,10 +413,10 @@ NIL
 HORIZONTAL
 
 PLOT
-705
-425
-905
-575
+3
+406
+203
+556
 max-vrienden-per-faculteit
 NIL
 NIL
@@ -427,10 +434,10 @@ PENS
 "pen-4" 1.0 0 -12345184 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"D\"]"
 
 SLIDER
-889
-122
-1061
-155
+666
+68
+838
+101
 max-friends
 max-friends
 0
@@ -440,6 +447,16 @@ max-friends
 1
 NIL
 HORIZONTAL
+
+CHOOSER
+663
+14
+852
+59
+feedbackmechanisme
+feedbackmechanisme
+"Geen feedback" "Rendement-gebaseerd" "Random"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -783,7 +800,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
