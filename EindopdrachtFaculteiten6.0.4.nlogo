@@ -21,6 +21,7 @@ turtles-own[
   happiness-T ; hoe gelukkig de student is academisch
   happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
   happiness ; hoe gelukkig de student is in het algemeen
+  dl ; learning-score, die student krijgt per keer dat hij/zij naar college gaat
 
 ]
 
@@ -236,9 +237,9 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
 end
 
 ;to basis-kans-factor
-;show count totale student-t                 ;; zegt dat "T" een string is inpl. van input
-;show count turtles faculteit
-;set average-score [ totale student-t / turtles]
+;show count totale student-t
+;show count totale studenten faculteit
+;set average-score [ totale student-t / totale studenten faculteit]
 ;ifelse average-score >= student-t  [count basis-kans-factor 1 - ((average-score - student-t )/10)][count basis-kans-factor 1 - ((student-t - average-score)/10)]
 ;end
 
@@ -253,9 +254,7 @@ end
 ;end
 
 ;to learn
-;ask student-t
-;ask patches T
-;show count dl [(student-t + patches T)/20]
+;show count dl show count ((student-t + faculteit-t)/20)]
 ;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -267,13 +266,11 @@ show count vrienden
 end
 
 ;to learning-happy
-;ask patches T
-;ifelse student-t > 5 en patchesT > student-t [show count happiness-T [patchesT / 5 - 0.5]][count happiness-T [ patchesT /10 * 0.5]]
+;ifelse student-t > 5 en faculteit-t > student-t [show count happiness-T [faculteit-t / 5 - 0.5]][count happiness-T [ facultiet-t /10 * 0.5]]
 ;end
 
 ;to prestige-happy
-;ask patches p
-;show count happiness-P [(student-p + patches P) / 20]
+;show count happiness-P [(student-p + faculteit-p) / 20]
 ;end
 
 ;to happiness
