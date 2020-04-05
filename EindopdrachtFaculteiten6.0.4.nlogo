@@ -6,7 +6,7 @@ patches-own[
   faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
   faculteit-letter ; faculty name
   strategie-faculteit ; voorlichtingsstrategie van de faculteit
-  gem-aantal-vrienden ; gemiddelde aantal vrienden per faculteit
+
 
 ]
 
@@ -20,6 +20,7 @@ turtles-own[
   max-vrienden-bereikt? ; true/false
   student-faculteit
   aantal-vrienden-ps
+
 ]
 
 globals [
@@ -27,8 +28,18 @@ globals [
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
   pvriend-s
-  aantal-vrienden-pf
-  tot-aantal-vrienden
+  aantal-vrienden-A
+  aantal-vrienden-B
+  aantal-vrienden-C
+  aantal-vrienden-D
+  tot-aantal-studenten-A
+  tot-aantal-studenten-B
+  tot-aantal-studenten-C
+  tot-aantal-studenten-D
+  gem-aantal-vrienden-A
+  gem-aantal-vrienden-B
+  gem-aantal-vrienden-C
+  gem-aantal-vrienden-D
 
 ]
 
@@ -59,6 +70,8 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
+    set aantal-vrienden-A 0
+    set tot-aantal-studenten-A 0
   ]
   ask patches with [faculteit = 2][
     set faculteit-letter "B"
@@ -67,6 +80,8 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
+    set aantal-vrienden-B 0
+    set tot-aantal-studenten-B 0
   ]
   ask patches with [faculteit = 3][
     set faculteit-letter "C"
@@ -75,6 +90,8 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
+    set aantal-vrienden-C 0
+    set tot-aantal-studenten-C 0
   ]
   ask patches with [faculteit = 4][
     set faculteit-letter "D"
@@ -83,12 +100,14 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
+    set aantal-vrienden-D 0
+    set tot-aantal-studenten-D 0
   ]
   ask patches[
-    set aantal-vrienden-pf 0
+
     set strategie-faculteit "honest"
   ]
-    set tot-aantal-vrienden []
+
 end
 
 ; many regions example
@@ -133,7 +152,7 @@ to go
 
   ; one-day procedure:
   ; move students
-  move-students
+   move-students
   ; naar college gaan
 
     ; vrienden maken
@@ -167,18 +186,18 @@ to setup-studenten
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
     set vrienden []
-    set aantal-vrienden-pf []
-    set aantal-vrienden-ps []
+    set aantal-vrienden-ps 0
     set max-vrienden-bereikt? false
-    set tot-aantal-vrienden 0
-    set aantal-vrienden-ps []
     set student-faculteit ([faculteit-letter] of patch-here)
-
    ;   if (keuzestrategie = "Rationeel") [move-to ]
   if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
   if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
   if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
+  set tot-aantal-studenten-A count turtles with [student-faculteit = "A"]
+  set tot-aantal-studenten-B count turtles with [student-faculteit = "B"]
+  set tot-aantal-studenten-C count turtles with [student-faculteit = "C"]
+  set tot-aantal-studenten-D count turtles with [student-faculteit = "D"]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 
 end
@@ -186,7 +205,7 @@ end
 ; studenten bewegen door de faculteit
 to move-students
   ;[ aangepaste versie van de Look ahead example]
-
+ask turtles[
         ifelse [faculteit-letter] of patch-ahead 1 = 0    ; als 1 patch verder, de grens van de faculteit is, draait de student zich linksom.
       [ lt random-float 360 ]
       [
@@ -196,7 +215,7 @@ to move-students
       let index (position first ([faculteit-profile] of patch-here) s-faculteit)
       fd (precision (item index speed-student) 1)
       ]
-
+  ]
 end
 
 to keuzestrategie-student
@@ -228,37 +247,102 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken ; gebaseerd op partners example & HIV model
-; vrienden maken
-  ask turtles[
-    let potentiele-vriend one-of other turtles-here
-    if potentiele-vriend != nobody[
-    ask potentiele-vriend[set pvriend-s student-s]
-    let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
-    if random 100 < vrienden-kans[
-    set vrienden (fput potentiele-vriend vrienden)
-    ]
+; vrienden maken faculteit A
+ if gem-aantal-vrienden-A < 60[
+  ask turtles with [faculteit-letter = "A"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+       ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
 
-  ]
-  ]
-
-  ; aantal-vrienden per student berekenen
-  ask turtles [
-    if empty? vrienden = false[
+      if empty? vrienden = false[
       set aantal-vrienden-ps length vrienden
-      set aantal-vrienden-pf (fput aantal-vrienden-ps aantal-vrienden-pf)
-  ]]
-      output-print aantal-vrienden-pf
+      set aantal-vrienden-A (aantal-vrienden-ps + aantal-vrienden-A)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-A (aantal-vrienden-A / tot-aantal-studenten-A)
 
-;  ask patches with [faculteit-letter = "A"][
-;    ask turtles-here [set aantal-vrienden-pf sum aantal-vrienden-ps]
-;    if aantal-vrienden-pf != 0[
-;    ;set tot-aantal-vrienden (insert-item 0 tot-aantal-vrienden aantal-vrienden-pf)
-;    ]
+; vrienden maken faculteit B
+   if gem-aantal-vrienden-B < 60[
+  ask turtles with [faculteit-letter = "B"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-B (aantal-vrienden-ps + aantal-vrienden-B)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-B (aantal-vrienden-B / tot-aantal-studenten-B)
+
+; vrienden maken faculteit C
+  if gem-aantal-vrienden-C < 60[
+  ask turtles with [faculteit-letter = "C"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-C (aantal-vrienden-ps + aantal-vrienden-C)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-C (aantal-vrienden-C / tot-aantal-studenten-C)
+
+; vrienden maken faculteit D
+  if gem-aantal-vrienden-D < 60[
+  ask turtles with [faculteit-letter = "D"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-D (aantal-vrienden-ps + aantal-vrienden-D)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-D (aantal-vrienden-D / tot-aantal-studenten-D)
+;    ask turtles with [faculteit-letter = "B"] [
+;    if empty? vrienden = false[
+;      set aantal-vrienden-ps length vrienden
+;      set aantal-vrienden-B (aantal-vrienden-ps + aantal-vrienden-B)
+;  ]]
+;    set gem-aantal-vrienden-B (aantal-vrienden-B / tot-aantal-studenten-B)
+;    ask turtles with [faculteit-letter = "C"] [
+;    if empty? vrienden = false[
+;      set aantal-vrienden-ps length vrienden
+;      set aantal-vrienden-C (aantal-vrienden-ps + aantal-vrienden-C)
+;  ]]
+;  set gem-aantal-vrienden-C (aantal-vrienden-C / tot-aantal-studenten-C)
+;    ask turtles with [faculteit-letter = "D"] [
+;    if empty? vrienden = false[
+;      set aantal-vrienden-ps length vrienden
+;      set aantal-vrienden-D (aantal-vrienden-ps + aantal-vrienden-D)
+;  ]]
+;    set gem-aantal-vrienden-D (aantal-vrienden-D / tot-aantal-studenten-D)
 ;  ]
 
-  ; gemiddeld aantal vrienden per faculteit berekenen
-  ; foreach
-    ;set gem-aantal-vrienden (tot-aantal-vrienden / studenten-faculteit-aantal)
+
 
 
 end
@@ -466,7 +550,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-1
+2
 
 SLIDER
 889
