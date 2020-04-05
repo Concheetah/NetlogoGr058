@@ -17,11 +17,14 @@ turtles-own[
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
   student-faculteit
+  verschil-s ; verschil tussen s waarden van student en faculteit
+  verschil-t ; verschil tussen t waarden van student en faculteit
+  verschil-p ; verschil tussen p waarden van student en faculteit
   happiness-S ; hoe gelukkig de student is in sociaal opzicht
   happiness-T ; hoe gelukkig de student is academisch
   happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
   happiness ; hoe gelukkig de student is in het algemeen
-  mood
+  mood ; happy/unhappy
   happy
   unhappy
   positief
@@ -37,7 +40,7 @@ globals [
   dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
   naar-college-gaan
   average-score
-  learning-score ; totale learning-score
+  learning-score ; totale learning-score, positief/negatief
   basis-kans-factor
   te-veel-vrienden-factor
   max-vrienden-happiness
@@ -231,6 +234,17 @@ to keuzestrategie-student
     ]]]]
 end
 
+to sort-s
+  ifelse faculteit-s >= student-s [ set verschil-s (faculteit-s - student-s)][set verschil-s (student-s - faculteit-s)]
+end
+
+to sort-t
+  ifelse faculteit-t >= student-t [ set verschil-t (faculteit-t - student-t)][set verschil-t (student-t - faculteit-t)]
+end
+
+to sort-p
+  ifelse faculteit-p >= student-p [ set verschil-p (faculteit-p - student-p)][set verschil-p (student-p - faculteit-p)]
+end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken
@@ -307,9 +321,9 @@ print learning-score
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
-to pass-year                                      ;; hier gaat nog iets mis
-show count turtles with [happy = true] and [learningscore = positief]
-end
+;to pass-year                                      ;; hier gaat nog iets mis
+;show count turtles with [happy = true] and [learningscore = positief]
+;end
 
 ;to rendement
 ;set rendement (doorstroom / tot-students-faculteit)
