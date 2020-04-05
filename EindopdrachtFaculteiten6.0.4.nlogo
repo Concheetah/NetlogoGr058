@@ -45,8 +45,7 @@ globals [
   te-veel-vrienden-factor
   max-vrienden-happiness
   doorstroom
-
-
+  verschil-tot ; totale verschil = verschil-s + verschil-t + verschil-p
 
 ]
 
@@ -245,6 +244,16 @@ end
 to sort-p
   ifelse faculteit-p >= student-p [ set verschil-p (faculteit-p - student-p)][set verschil-p (student-p - faculteit-p)]
 end
+
+to divide
+  set verschil-tot (verschil-s + verschil-t + verschil-p)
+end
+
+to rationeel
+  if color = green [ move-to min-one-of patches with [faculteit-letter != 0][verschil-tot]]
+end
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken
@@ -322,7 +331,7 @@ ifelse learning-score >= learning-score-min [set learning-score positief][set le
 end
 
 ;to pass-year                                      ;; hier gaat nog iets mis
-;show count turtles with [happy = true] and [learningscore = positief]
+;  ifelse turtle show count turtles with happy and positief [doorstoom]
 ;end
 
 ;to rendement
@@ -463,7 +472,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
+0
 
 SLIDER
 67
