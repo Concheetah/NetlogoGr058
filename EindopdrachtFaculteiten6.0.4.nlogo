@@ -1,9 +1,9 @@
 patches-own[
   faculteit ; a list of the faculteiten, in numbers
   faculteit-profile    ; a list of the faculty profile (S, T, P)
-  faculteit-s
-  faculteit-p
-  faculteit-t
+  faculteit-s ; nog niet geprogrammeerd
+  faculteit-p ; nog niet geprogrammeerd
+  faculteit-t ; nog niet geprogrammeerd
   faculteit-letter ; faculty name
   strategie-faculteit ; voorlichtingsstrategie van de faculteit
 ]
@@ -11,8 +11,8 @@ patches-own[
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
   student-s
-  student-t
-  student-p
+  student-t ; nog niet geprogrammeerd
+  student-p ; nog niet geprogrammeerd
   vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
@@ -49,25 +49,38 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-profile [8 2 2]
     set pcolor 14
     set strategie-faculteit "honest"
+    set faculteit-s (item 0 faculteit-profile)
+    set faculteit-t (item 1 faculteit-profile)
+    set faculteit-p (item 2 faculteit-profile)
   ]
   ask patches with [faculteit = 2][
     set faculteit-letter "B"
     set faculteit-profile [2 8 3]
     set pcolor 34
     set strategie-faculteit "honest"
+    set faculteit-s (item 0 faculteit-profile)
+    set faculteit-t (item 1 faculteit-profile)
+    set faculteit-p (item 2 faculteit-profile)
   ]
   ask patches with [faculteit = 3][
     set faculteit-letter "C"
     set faculteit-profile [2 8 8]
     set pcolor 44
     set strategie-faculteit "honest"
+    set faculteit-s (item 0 faculteit-profile)
+    set faculteit-t (item 1 faculteit-profile)
+    set faculteit-p (item 2 faculteit-profile)
   ]
   ask patches with [faculteit = 4][
     set faculteit-letter "D"
     set faculteit-profile [5 5 9]
     set pcolor 84
     set strategie-faculteit "honest"
+    set faculteit-s (item 0 faculteit-profile)
+    set faculteit-t (item 1 faculteit-profile)
+    set faculteit-p (item 2 faculteit-profile)
   ]
+
 end
 
 to draw-faculteit-division [ x ]
@@ -103,12 +116,20 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
+  ; setup-studenten
+
+  ; studiekeuze
+
   ; one-day procedure:
   ; move students
   ask turtles [if max-vrienden-bereikt? = false [move-students]] ; alleen bewegen als max-vrienden niet is bereikt
   ; naar college gaan
   vrienden-maken
   test
+
+  ; einde van het jaar
+  ; feedback
+  ; studenten studeren af
   tick
 end
 
@@ -125,7 +146,9 @@ to setup-studenten
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-    set student-s first student-profile
+    set student-s (item 0 student-profile)
+    set student-t (item 1 student-profile)
+    set student-p (item 2 student-profile)
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
@@ -326,7 +349,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-3
+4
 
 SLIDER
 67
