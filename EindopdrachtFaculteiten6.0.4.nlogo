@@ -237,24 +237,68 @@ end
 ;ifelse average-score >= "T"  [count basis-kans-factor 1 - ((average-score - "T" )/10)][count basis-kans-factor 1 - (("T" - average-score)/10)]
 ;end
 
-;to te-veel-vrienden-factor
-;show count vrienden
+to te-veel-vrienden-factor
+show count vrienden
 ;ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
 ;  [ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
-;end
+end
 
 ;to naar-college-gaan
 ;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
 ;end
 
 ;to learn
-;turtle "T"
+;ask turtle "T"
 ;ask patches T
 ;show count dl [(turtle "T" + patches T)/20]
 ;end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+to happiness-S
+;ask turtle "S"
+show count vrienden
+;set max-vrienden-happiness [("S" * 6)]
+;set happiness-S [ (vrienden / max-vrienden-happiness)]
+end
+
+;to happiness-T
+;ask turtle "T"
+;ask patches T
+;ifelse turtle "T" > 5 en patchesT > "T" [show count happiness-T [patchesT / 5 - 0.5]][count happiness-T [ patchesT /10 * 0.5]]
+;end
+
+;to happiness-P
+;ask turtle "P"
+;ask patches p
+;show count happiness-P [("P" + patches P) / 20]
+;end
+
+;to happiness
+;show count happiness [(happiness-S + happiness-T + happiness-P) / 3] * 100      ;; achter count moet een agentset
+;end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;to be-happy
+;ifelse happiness >= happiness-score-min [happy][unhappy]    ;; happiness defined
+;end
+
+;to be-positief
+;show count naar-college-gaan                                     ;; check of het lukt om alle keren te tellen dat student naar college gaat met de code
+;show count learning-score [dl * naar-college-komen]
+;ifelse learnig-score >= learning-score-min [positief][negatief]   ;; learning-score defined
+;end
+
+;to doorstroom
+;show count turtles with [happy][[positief]
+;end
+
+;to rendement
+;set rendement [[doorstroom] / tot-students-faculteit]
+;end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; feedback procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
