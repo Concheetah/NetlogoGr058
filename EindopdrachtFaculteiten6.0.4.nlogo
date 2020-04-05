@@ -176,8 +176,8 @@ end
 ;to vrienden-maken
 ;vraag studenten of ze nog vrienden kunnen maken
 ;max-aantal-vrienden bereikt? if (vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? false])
+;kans-vrienden worden: round( (S-waarde student/10) * (S-waarde andere student/10) ) = 1 is vrienden / 0 is geen vrienden
 ;voeg student toe aan beide vriendenlijsten
-;round( (S-waarde student/10) * (S-waarde andere student/10) ) = 1 is vrienden / 0 is geen vrienden
 ;end
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
