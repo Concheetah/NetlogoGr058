@@ -5,11 +5,14 @@ patches-own[
   faculteit-p
   faculteit-t
   faculteit-letter ; faculty name
-  strategie ; voorlichtingsstrategie van de faculteit
+  strategie-faculteit ; voorlichtingsstrategie van de faculteit
 ]
 
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
+  student-s
+  student-t
+  student-p
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
 ]
 
@@ -42,26 +45,56 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "A"
     set faculteit-profile [8 2 2]
     set pcolor 14
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 2][
     set faculteit-letter "B"
     set faculteit-profile [2 8 3]
     set pcolor 34
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 3][
     set faculteit-letter "C"
     set faculteit-profile [2 8 8]
     set pcolor 44
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
   ask patches with [faculteit = 4][
     set faculteit-letter "D"
     set faculteit-profile [5 5 9]
     set pcolor 84
-    set strategie "honest"
+    set strategie-faculteit "honest"
   ]
+end
+
+to draw-faculteit-division [ x ]
+  ask patches with [ pxcor = x ] [
+    set pcolor grey + 1.5
+  ]
+  create-turtles 1 [
+    ; use a temporary turtle to draw a line in the middle of our division
+    setxy x max-pycor + 0.5
+    set heading 0
+    set color grey - 3
+    pen-down
+    forward world-height
+    set xcor xcor + 1 / patch-size
+    right 180
+    set color grey + 3
+    forward world-height
+    die ; our turtle has done its job and is no longer needed
+  ]
+end
+
+to-report faculteiten-divisions [ num-faculteits ]
+  report n-values (num-faculteits + 1) [ n ->
+    [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-faculteits))) 0
+  ]
+end
+
+to-report calculate-faculteit-boundaries [ num-faculteits ]
+  let divisions faculteiten-divisions num-faculteits
+  report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -135,35 +168,7 @@ to keuzestrategie-student
     ]]]]
 end
 
-to draw-faculteit-division [ x ]
-  ask patches with [ pxcor = x ] [
-    set pcolor grey + 1.5
-  ]
-  create-turtles 1 [
-    ; use a temporary turtle to draw a line in the middle of our division
-    setxy x max-pycor + 0.5
-    set heading 0
-    set color grey - 3
-    pen-down
-    forward world-height
-    set xcor xcor + 1 / patch-size
-    right 180
-    set color grey + 3
-    forward world-height
-    die ; our turtle has done its job and is no longer needed
-  ]
-end
 
-to-report faculteiten-divisions [ num-faculteits ]
-  report n-values (num-faculteits + 1) [ n ->
-    [ pxcor ] of patch (min-pxcor + (n * ((max-pxcor - min-pxcor) / num-faculteits))) 0
-  ]
-end
-
-to-report calculate-faculteit-boundaries [ num-faculteits ]
-  let divisions faculteiten-divisions num-faculteits
-  report (map [ [d1 d2] -> list (d1 + 1) (d2 - 1) ] (but-last divisions) (but-first divisions))
-end
 
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -178,19 +183,19 @@ to test-faculties
   ask one-of patches with [faculteit-letter = "A"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "B"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "C"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
   ask one-of patches with [faculteit-letter = "D"] [
     output-print faculteit-letter
     output-print faculteit-profile
-    output-print strategie]
+    output-print strategie-faculteit]
 end
 
 to test-studenten
@@ -290,7 +295,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
+3
 
 @#$#@#$#@
 ## WHAT IS IT?
