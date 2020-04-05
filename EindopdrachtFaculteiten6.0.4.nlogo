@@ -16,6 +16,7 @@ turtles-own[
   vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
+  student-faculteit
 ]
 
 globals [
@@ -28,7 +29,7 @@ to setup
   clear-all
   setup-faculteiten 4
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
-  test
+  ;test
   reset-ticks
 end
 
@@ -124,14 +125,14 @@ to setup-studenten
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-      set student-s first student-profile
+    set student-s first student-profile
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
     set vrienden []
     set max-vrienden-bereikt? false
+      set student-faculteit ([faculteit-letter] of patch-here)
   ]]
-
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
 
@@ -183,10 +184,16 @@ to vrienden-maken
 ask turtles[
 if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? = false]) ; gebaseerd op partners example
 [
-      set vrienden (fput ([who] of turtles-here with-max[student-s]) vrienden)
+      let potentiele-vriend one-of turtles-here ;dit moet nog met de maximale s-waarde op de patch van de turtles gecombineerd worden
+      if  member? potentiele-vriend vrienden = false[
+        set vrienden (fput potentiele-vriend vrienden)
+       ; ask first vrienden [set vrienden (fput myself vrienden)
+        ]
+      ]
+
 ;voeg student toe aan beide vriendenlijsten
     if length vrienden = max-vrienden [set max-vrienden-bereikt? true]
-  ]]
+  ]
 
 end
 
@@ -196,7 +203,7 @@ end
 to test
 ;  test-faculties
 ;  test-setup-studenten
-;  test-move-studenten
+ ;test-move-studenten
 end
 
 to test-faculties
@@ -223,7 +230,7 @@ to test-setup-studenten
 end
 
 to test-move-studenten
-    ask turtles [output-print length vrienden]
+  if ticks > 100 [ask turtles with [max-vrienden-bereikt? = true][output-print vrienden]]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -335,6 +342,27 @@ max-vrienden
 1
 NIL
 HORIZONTAL
+
+PLOT
+705
+425
+905
+575
+max-vrienden-per-faculteit
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"pen-1" 1.0 0 -5298144 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"A\"]"
+"pen-2" 1.0 0 -8431303 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"B\"]"
+"pen-3" 1.0 0 -4079321 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"C\"]"
+"pen-4" 1.0 0 -12345184 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"D\"]"
 
 @#$#@#$#@
 ## WHAT IS IT?
