@@ -21,7 +21,7 @@ turtles-own[
   happiness-T ; hoe gelukkig de student is academisch
   happiness-P ; hoe gelukkig de student is met de prestige van de opleiding
   happiness ; hoe gelukkig de student is in het algemeen
-  dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
+
   learnig-score ; totale learning-score
   basis-kans-factor
   te-veel-vrienden-factor
@@ -34,6 +34,7 @@ globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+  dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
 
 ]
 
@@ -259,9 +260,10 @@ end
 ;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
 ;end
 
-;to learn
-;show count dl = ((student-t + faculteit-t) / 20))
-;end
+to learn
+set dl ((student-t + faculteit-t) / 20)
+print dl
+end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
