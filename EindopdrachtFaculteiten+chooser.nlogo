@@ -229,7 +229,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
+0
 
 MONITOR
 90
@@ -243,10 +243,10 @@ count turtles with [color = red]
 11
 
 MONITOR
-15
-371
-80
-416
+14
+409
+79
+454
 rationeel
 count turtles with [color = green]
 17
@@ -254,10 +254,10 @@ count turtles with [color = green]
 11
 
 MONITOR
-13
-425
-81
-470
+12
+463
+80
+508
 ambitieus
 count turtles with [color = blue]
 17
@@ -265,15 +265,25 @@ count turtles with [color = blue]
 11
 
 MONITOR
-91
-426
-159
-471
+90
+464
+158
+509
 snob
 count turtles with [color = yellow]
 17
 1
 11
+
+CHOOSER
+6
+353
+195
+398
+feedbackmechanisme
+feedbackmechanisme
+"Geen feedback" "Rendement-gebaseerd" "Random"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?

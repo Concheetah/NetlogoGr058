@@ -62,10 +62,16 @@ to setup-faculteiten [num-faculteiten]
   ]
 end
 
+;to nieuwe-strategie
+;  ask patches [
+;  if (feedbackmechanisme = "Geen feedback") []
+;  ]
+;end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
-  ; one-day procedure:
+; one-day procedure:
   ; move students
   move-students
   ; naar college gaan
@@ -74,20 +80,35 @@ to go
 end
 
 to setup-studenten
+   if (keuzestrategie = "Rationeel")
+  [create-turtles 300 [set color green]]
+  if (keuzestrategie = "Feestbeest")
+    [create-turtles 300 [set color red]]
+   if (keuzestrategie = "Ambitieus")
+    [create-turtles 300 [set color blue]]
+   if (keuzestrategie = "Snob")
+    [create-turtles 300 [set color yellow]]
+  if (keuzestrategie = "Mixed")
+   [ create-turtles 75 [set color green]
+    create-turtles 75 [set color red]
+    create-turtles 75 [set color blue]
+    create-turtles 75 [set color yellow]]
   ; studenten worden random verdeeld over de faculteiten
-  ask n-of 300 patches with [faculteit-letter != 0][
-  sprout 1
-  [
-
+;  ask n-of 300 patches with [faculteit-letter != 0][
+;    sprout 1]
+  ask turtles
+  [ setxy random-xcor random-ycor
     set shape "person"
+    if (color = green)  [act-rationeel]
+    if (color = red)    [act-feestbeest]
+    if (color = blue)   [act-ambitieus]
+    if (color = yellow) [act-snob]
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
-    set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hier kan toekennen van de keuzestrategie van de student @Warsha  ?
+    set student-profile (map [a -> (random 9 + 1)] student-profile)
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
 
-  ]
   ]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
@@ -104,6 +125,22 @@ to move-students
       let index (position first ([faculteit-profile] of patch-here) s-faculteit)
       fd (precision (item index speed-student) 1)
       ]  ]
+end
+
+to act-rationeel
+;  ask turtles
+end
+
+to act-feestbeest
+;  ask turtles
+end
+
+to act-ambitieus
+;   ask turtles
+end
+
+to act-snob
+;   ask turtles
 end
 
 to draw-faculteit-division [ x ]
@@ -142,7 +179,7 @@ end
 
 to test
 ;  test-faculties
- ; test-studenten
+;  test-studenten
 end
 
 to test-faculties
@@ -196,10 +233,10 @@ ticks
 30.0
 
 BUTTON
-57
-78
-120
-111
+0
+51
+63
+84
 NIL
 setup\n
 NIL
@@ -213,17 +250,17 @@ NIL
 1
 
 OUTPUT
-49
-135
-192
-334
+3
+98
+146
+297
 11
 
 BUTTON
-130
-78
-193
-111
+69
+51
+132
+84
 NIL
 go
 T
@@ -237,10 +274,10 @@ NIL
 1
 
 BUTTON
-72
-352
-147
-385
+138
+51
+205
+84
 go once
 go
 NIL
@@ -252,6 +289,87 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+4
+307
+160
+352
+keuzestrategie
+keuzestrategie
+"Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
+4
+
+CHOOSER
+3
+357
+159
+402
+feedbackmechanisme
+feedbackmechanisme
+"Geen feedback" "Rendement-gebaseerd" "Random"
+0
+
+BUTTON
+4
+413
+67
+446
+NIL
+test
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+MONITOR
+4
+459
+71
+504
+rationeel
+count turtles with [color = green]
+17
+1
+11
+
+MONITOR
+91
+510
+148
+555
+snob
+count turtles with [color = yellow]
+17
+1
+11
+
+MONITOR
+2
+510
+79
+555
+feestbeest
+count turtles with [color = red]
+17
+1
+11
+
+MONITOR
+76
+460
+149
+505
+ambitieus
+count turtles with [color = blue]
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
