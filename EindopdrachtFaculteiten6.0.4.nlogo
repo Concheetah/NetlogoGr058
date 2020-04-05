@@ -33,12 +33,15 @@ globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+  studenten-faculteit-aantal ; aantal studenten op een faculteit
   dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
   naar-college-gaan
+  average-score
   learning-score ; totale learning-score
   basis-kans-factor
   te-veel-vrienden-factor
   max-vrienden-happiness
+
 
 
 ]
@@ -248,22 +251,22 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
 
 end
 
-;to basis-kans
-;show count totale student-t
-;show count totale studenten faculteit
-;set average-score [ totale student-t / totale studenten faculteit]
-;ifelse average-score >= student-t  [count basis-kans-factor 1 - ((average-score - student-t )/10)][count basis-kans-factor 1 - ((student-t - average-score)/10)]
-;end
+to basis-kans
+show count studenten-faculteit-aantal
+;show totale student-t
+;set average-score ( totale student-t / studenten-faculteit-aantal)
+ifelse average-score >= student-t  [set basis-kans-factor 1 - ((average-score - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score) / 10)]
+end
 
 to te-veel-vrienden
 show count vrienden
-;ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
-;  [ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
+ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
+[ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
 end
 
-;to naar-college-gaan
-;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
-;end
+to college
+set naar-college-gaan  (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))       ;; vind iets anders dan set, set heeft twee inputs nodig
+end
 
 to learn
 set dl ((student-t + faculteit-t) / 20)
@@ -274,21 +277,21 @@ end
 
 to social-happy
 show count vrienden
-;set max-vrienden-happiness [(student-s * 6)]
-;set happiness-S [ (vrienden / max-vrienden-happiness)]
+set max-vrienden-happiness (student-s * 6)
+set happiness-S (vrienden / max-vrienden-happiness)
 end
 
-;to learning-happy
-;ifelse student-t > 5 en faculteit-t > student-t [show count happiness-T [faculteit-t / 5 - 0.5]][count happiness-T [ faculteit-t /10 * 0.5]]
-;end
+to learning-happy
+ifelse student-t > 5 and faculteit-t > student-t [set happiness-T (faculteit-t / 5 - 0.5)][set happiness-T ( faculteit-t / 10 * 0.5)]
+end
 
-;to prestige-happy
-;show count happiness-P [(student-p + faculteit-p) / 20]
-;end
+to prestige-happy
+set happiness-P ((student-p + faculteit-p) / 20)
+end
 
-;to happy-overall
-;show count happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
-;end
+to happy-overall
+set happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
+end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
