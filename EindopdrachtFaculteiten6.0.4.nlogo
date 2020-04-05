@@ -10,11 +10,13 @@ patches-own[
 
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
+  strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
+  studenten-aantal     ; aantal studenten totaal
 ]
 
 to setup
@@ -75,33 +77,20 @@ end
 
 to setup-studenten
   ; studenten worden random verdeeld over de faculteiten
+  set studenten-aantal 0
   ask n-of 300 patches with [faculteit-letter != 0][
   sprout 1
   [
-    set shape "person"
+    set studenten-aantal (studenten-aantal + 1)
+      set shape "person"
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hier kan toekennen van de keuzestrategie van de student @Warsha  ?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
-      ifelse (keuzestrategie = "Rationeel")
-        [set color green][
-     ifelse (keuzestrategie = "Feestbeest")
-        [set color red][
-     ifelse (keuzestrategie = "Ambitieus")
-        [set color blue][
-     ifelse (keuzestrategie = "Snob")
-        [set color yellow][
-     if (keuzestrategie = "Mixed")
-        [let keuze-kans random 100
-        if keuze-kans < 25 [set color green]
-        if keuze-kans < 50 and keuze-kans >= 25  [set color red]
-        if keuze-kans < 75 and keuze-kans >= 50  [set color blue]
-        if keuze-kans < 100 and keuze-kans >= 75 [set color yellow]]
-    ]]]]]
+    keuzestrategie-student
 
-  ]
+  ]]
 
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
@@ -118,6 +107,32 @@ to move-students
       let index (position first ([faculteit-profile] of patch-here) s-faculteit)
       fd (precision (item index speed-student) 1)
       ]  ]
+end
+
+to keuzestrategie-student
+  ifelse (keuzestrategie = "Rationeel")
+        [set color green
+         set strategie-student "Rationeel"][
+     ifelse (keuzestrategie = "Feestbeest")
+        [set color red
+          set strategie-student "Feestbeest"][
+     ifelse (keuzestrategie = "Ambitieus")
+        [set color blue
+         set strategie-student "Ambitieus"][
+     ifelse (keuzestrategie = "Snob")
+        [set color yellow
+         ][
+     if (keuzestrategie = "Mixed")
+        [
+        ;75 studenten worden groen
+         if studenten-aantal <= 75 [set color green set strategie-student "Rationeel"]
+        ;75 studenten worden rood
+         if studenten-aantal <= 150 and studenten-aantal > 75 [set color red set strategie-student "Feestbeest"]
+        ;75 studenten worden blauw
+         if studenten-aantal <= 225 and studenten-aantal > 150 [set color blue set strategie-student "Ambitieus"]
+        ;75 studenten worden geel
+         if studenten-aantal <= 300 and studenten-aantal > 225 [set color yellow set strategie-student "Snob"]]
+    ]]]]
 end
 
 to draw-faculteit-division [ x ]
