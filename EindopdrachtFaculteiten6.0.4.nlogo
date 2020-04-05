@@ -30,6 +30,7 @@ globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+
 ]
 
 to setup
@@ -216,7 +217,7 @@ to keuzestrategie-student
     ]]]]
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken
 ;vraag studenten of ze nog vrienden kunnen maken
@@ -237,14 +238,14 @@ if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrie
 
 end
 
-;to basis-kans-factor
+;to basis-kans
 ;show count totale student-t
 ;show count totale studenten faculteit
 ;set average-score [ totale student-t / totale studenten faculteit]
 ;ifelse average-score >= student-t  [count basis-kans-factor 1 - ((average-score - student-t )/10)][count basis-kans-factor 1 - ((student-t - average-score)/10)]
 ;end
 
-to te-veel-vrienden-factor
+to te-veel-vrienden
 show count vrienden
 ;ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
 ;  [ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
@@ -254,9 +255,9 @@ end
 ;set naar-college-gaan [ (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))]        ;; vind iets anders dan set, set heeft twee inputs nodig
 ;end
 
-;to learn
-;show count dl show count ((student-t + faculteit-t)/20)]
-;end
+to learn
+  show count dl show count [((student-t + faculteit-t)/20)]
+end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
