@@ -6,6 +6,8 @@ patches-own[
   faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
   faculteit-letter ; faculty name
   strategie-faculteit ; voorlichtingsstrategie van de faculteit
+  gem-aantal-vrienden ; gemiddelde aantal vrienden per faculteit
+
 ]
 
 turtles-own[
@@ -13,16 +15,21 @@ turtles-own[
   student-s ; hoe sociaal de student is
   student-t ; hoe technische de student is of hoe sterk in de betavakken
   student-p ; hoe belangrijk de student prestige vind
-  vrienden ; een lijst met alle turtles die vrienden zijn
+  vrienden ; een lijst met alle vrienden van deze student
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
   student-faculteit
+  aantal-vrienden-ps
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+  pvriend-s
+  aantal-vrienden-pf
+  tot-aantal-vrienden
+
 ]
 
 to setup
@@ -30,7 +37,6 @@ to setup
   setup-faculteiten 4
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
   ;test
-  show "hello"
   reset-ticks
 end
 
@@ -50,7 +56,6 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "A"
     set faculteit-profile [8 2 2]
     set pcolor 14
-    set strategie-faculteit "honest"
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
@@ -59,7 +64,6 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "B"
     set faculteit-profile [2 8 3]
     set pcolor 34
-    set strategie-faculteit "honest"
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
@@ -68,7 +72,6 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "C"
     set faculteit-profile [2 8 8]
     set pcolor 44
-    set strategie-faculteit "honest"
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
@@ -77,11 +80,15 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-letter "D"
     set faculteit-profile [5 5 9]
     set pcolor 84
-    set strategie-faculteit "honest"
     set faculteit-s (item 0 faculteit-profile)
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
   ]
+  ask patches[
+    set aantal-vrienden-pf 0
+    set strategie-faculteit "honest"
+  ]
+    set tot-aantal-vrienden []
 end
 
 ; many regions example
@@ -126,8 +133,10 @@ to go
 
   ; one-day procedure:
   ; move students
-  ask turtles [if max-vrienden-bereikt? = false [move-students]] ; alleen bewegen als max-vrienden niet is bereikt
+  move-students
   ; naar college gaan
+
+    ; vrienden maken
   vrienden-maken
   test
 
@@ -135,6 +144,7 @@ to go
   ; feedback
   ; studenten studeren af
   tick
+  if ticks = 365 [stop]
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; studenten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -157,14 +167,20 @@ to setup-studenten
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
     set vrienden []
+    set aantal-vrienden-pf []
+    set aantal-vrienden-ps []
     set max-vrienden-bereikt? false
+    set tot-aantal-vrienden 0
+    set aantal-vrienden-ps []
     set student-faculteit ([faculteit-letter] of patch-here)
+
    ;   if (keuzestrategie = "Rationeel") [move-to ]
   if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
   if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
   if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
+
 end
 
 ; studenten bewegen door de faculteit
@@ -211,22 +227,39 @@ end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day pocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to vrienden-maken
-;vraag studenten of ze nog vrienden kunnen maken
-;max-aantal-vrienden bereikt?
-ask turtles[
-if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? = false]) ; gebaseerd op partners example
-[
-      let potentiele-vriend one-of turtles-here ; dit moet nog met de maximale s-waarde op de patch van de turtles gecombineerd worden
-      if  member? potentiele-vriend vrienden = false[
-        set vrienden (fput potentiele-vriend vrienden)
-       ; ask first vrienden [set vrienden (fput myself vrienden)
-        ]
-      ]
+to vrienden-maken ; gebaseerd op partners example & HIV model
+; vrienden maken
+  ask turtles[
+    let potentiele-vriend one-of other turtles-here
+    if potentiele-vriend != nobody[
+    ask potentiele-vriend[set pvriend-s student-s]
+    let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+    if random 100 < vrienden-kans[
+    set vrienden (fput potentiele-vriend vrienden)
+    ]
 
-;voeg student toe aan beide vriendenlijsten
-    if length vrienden = max-vrienden [set max-vrienden-bereikt? true]
   ]
+  ]
+
+  ; aantal-vrienden per student berekenen
+  ask turtles [
+    if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-pf (fput aantal-vrienden-ps aantal-vrienden-pf)
+  ]]
+      output-print aantal-vrienden-pf
+
+;  ask patches with [faculteit-letter = "A"][
+;    ask turtles-here [set aantal-vrienden-pf sum aantal-vrienden-ps]
+;    if aantal-vrienden-pf != 0[
+;    ;set tot-aantal-vrienden (insert-item 0 tot-aantal-vrienden aantal-vrienden-pf)
+;    ]
+;  ]
+
+  ; gemiddeld aantal vrienden per faculteit berekenen
+  ; foreach
+    ;set gem-aantal-vrienden (tot-aantal-vrienden / studenten-faculteit-aantal)
+
 
 end
 
@@ -309,7 +342,7 @@ end
 to test
 ;  test-faculties
 ;  test-setup-studenten
- ;test-move-studenten
+; test-moving-studenten
 end
 
 to test-faculties
@@ -335,8 +368,9 @@ to test-setup-studenten
   ask turtles [output-print student-profile]
 end
 
-to test-move-studenten
+to test-moving-studenten
   if ticks > 100 [ask turtles with [max-vrienden-bereikt? = true][output-print vrienden]]
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -432,43 +466,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
-
-SLIDER
-67
-497
-239
-530
-max-vrienden
-max-vrienden
-0
-60
-55.0
 1
-1
-NIL
-HORIZONTAL
-
-PLOT
-705
-425
-905
-575
-max-vrienden-per-faculteit
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"pen-1" 1.0 0 -5298144 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"A\"]"
-"pen-2" 1.0 0 -8431303 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"B\"]"
-"pen-3" 1.0 0 -4079321 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"C\"]"
-"pen-4" 1.0 0 -12345184 true "" "plot count turtles with [max-vrienden-bereikt? = true and student-faculteit = \"D\"]"
 
 SLIDER
 889
@@ -857,7 +855,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
