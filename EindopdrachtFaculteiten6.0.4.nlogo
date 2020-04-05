@@ -15,14 +15,13 @@ turtles-own[
   student-p
   vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
-  max-aantal-vrienden? ; true/false
+  max-vrienden-bereikt? ; true/false
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
-  max-vrienden ; maximale aantal vrienden dat een student kan hebben (slider)
 ]
 
 to setup
@@ -105,9 +104,10 @@ end
 to go
   ; one-day procedure:
   ; move students
-  move-students
+  ask turtles [if max-vrienden-bereikt? = false [move-students]] ; alleen bewegen als max-vrienden niet is bereikt
   ; naar college gaan
-  ; vrienden maken
+  vrienden-maken
+  test
   tick
 end
 
@@ -124,10 +124,12 @@ to setup-studenten
     ; random getallen tussen 1 en 10 genereren voor de S, T en P waardes van de student
     set student-profile ["S" "T" "P"]
     set student-profile (map [a -> (random 9 + 1)] student-profile)                    ; willekeurig profiel toekennen aan elke student
+      set student-s first student-profile
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Learning score @Milou?
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Happiness score @Milou?
     keuzestrategie-student
-    set vrienden [nobody]
+    set vrienden []
+    set max-vrienden-bereikt? false
   ]]
 
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
@@ -135,8 +137,9 @@ end
 
 ; studenten bewegen door de faculteit
 to move-students
-  ; als de student de grens van de faculteit tegenkomt, draait hij/zij linksom random getal. [ aangepaste versie van de Look ahead example]
-      ask turtles [ifelse [faculteit-letter] of patch-ahead 1 = 0
+  ;[ aangepaste versie van de Look ahead example]
+
+        ifelse [faculteit-letter] of patch-ahead 1 = 0    ; als 1 patch verder, de grens van de faculteit is, draait de student zich linksom.
       [ lt random-float 360 ]
       [
       ; we kijken welke faculteit de student zich bevind en of ze zich sneller gaan bewegen (om meer medestudenten tegen te komen) of minder
@@ -144,7 +147,8 @@ to move-students
       let speed-student (range 0 1 0.1)
       let index (position first ([faculteit-profile] of patch-here) s-faculteit)
       fd (precision (item index speed-student) 1)
-      ]  ]
+      ]
+
 end
 
 to keuzestrategie-student
@@ -173,19 +177,26 @@ to keuzestrategie-student
     ]]]]
 end
 
-;to vrienden-maken
+to vrienden-maken
 ;vraag studenten of ze nog vrienden kunnen maken
-;max-aantal-vrienden bereikt? if (vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? false])
-;kans-vrienden worden: round( (S-waarde student/10) * (S-waarde andere student/10) ) = 1 is vrienden / 0 is geen vrienden
+;max-aantal-vrienden bereikt?
+ask turtles[
+if (length vrienden != max-vrienden) and (any? other turtles-here with [max-vrienden-bereikt? = false]) ; gebaseerd op partners example
+[
+      set vrienden (fput ([who] of turtles-here with-max[student-s]) vrienden)
 ;voeg student toe aan beide vriendenlijsten
-;end
+    if length vrienden = max-vrienden [set max-vrienden-bereikt? true]
+  ]]
+
+end
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are all the test functions for checking the behavior of the model thusfar
 
 to test
 ;  test-faculties
- ; test-studenten
+;  test-setup-studenten
+;  test-move-studenten
 end
 
 to test-faculties
@@ -207,8 +218,12 @@ to test-faculties
     output-print strategie-faculteit]
 end
 
-to test-studenten
+to test-setup-studenten
   ask turtles [output-print student-profile]
+end
+
+to test-move-studenten
+    ask turtles [output-print length vrienden]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -305,6 +320,21 @@ keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
 3
+
+SLIDER
+67
+497
+239
+530
+max-vrienden
+max-vrienden
+0
+60
+55.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
