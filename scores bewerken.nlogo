@@ -12,7 +12,7 @@
 
 
 ;; to college
-;; set coming-to-college [kans? ((1 - te-veel-vrienden-factor) * basis-kans-factor)]
+;; set coming-to-college [random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100)]
 ;; end
 
 ;; to learn
@@ -25,7 +25,7 @@
 ;; to happiness-S
 ;; ask turtle "S"
 ;; count friends
-;; count max-friends [ "S" * 6]
+;; count max-friends ["S" * 6]
 ;; set happiness-S
 ;; count friends/max-friends
 ;; end
@@ -33,19 +33,16 @@
 ;; to happiness-T
 ;; ask turtle "T"
 ;; ask patches T
-;; if turtle "T">5 en patchesT>"T" [0.5 <happiness-T < 1]
-;; count happiness-T [patchesT/5-0.5]
-;; ifelse
-;; count happiness-T [ patchesT/10*0.5]
+;; ifelse turtle "T" > 5 en patchesT > "T" [count happiness-T [patchesT / 5 - 0.5]][count happiness-T [ patchesT /10 * 0.5]]
 ;; end
 
 ;; to happiness-P
 ;; ask turtle "P"
 ;; ask patches p
-;; count happiness-P [("P"+ patches P)/20]
+;; count happiness-P [("P" + patches P) / 20]
 
 ;; to happiness
-;; count happiness [(happiness-S + happiness-T + happiness-P)/3] * 100
+;; count happiness [(happiness-S + happiness-T + happiness-P) / 3] * 100
 ;; end
 
 ;; to next year part 1
@@ -55,6 +52,15 @@
 ;; to next year part 2
 ;; count coming-college
 ;; count learning-score [dl * coming-college]
+;; ifelse learnig-score >= learning-score-min [positief][negatief]
+;; end
+
+;; to doorstroom
+;; show count turtles with [happy][[positief]
+;; end
+
+;; to rendement
+;; set rendement [[doorstroom] / students
 
 ;;
 
