@@ -10,7 +10,6 @@
 ;; ifelse friends >= max-friends [set te-veel-vrienden-factor 1][count te-veel-vrienden-factor friends/max-friends]
 ;; end
 
-
 ;; to college
 ;; set coming-to-college [random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100)]
 ;; end
@@ -63,7 +62,6 @@
 ;; set rendement [[doorstroom] / students
 
 ;;
-
 
 
 @#$#@#$#@
