@@ -413,7 +413,7 @@ set happiness-S (vrienden / max-vrienden-happiness)
 end
 
 to learning-happy
-ifelse student-t > 5 and faculteit-t > student-t [set happiness-T (faculteit-t / 5 - 0.5)][set happiness-T ( faculteit-t / 10 * 0.5)]
+ifelse student-t > 5 = true and faculteit-t > student-t = true [set happiness-T (faculteit-t / 5 - 0.5)][set happiness-T ( faculteit-t / 10 * 0.5)]
 end
 
 to prestige-happy
