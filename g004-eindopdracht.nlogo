@@ -515,12 +515,12 @@ to honest
 end
 
 to S+
- set faculteit-s (item 0 faculteit-profile) + 1
+ set faculteit-profile replace-item 0 faculteit-profile ((item 0 faculteit-profile) + 1)
  set strategie-faculteit "S+"
 end
 
 to S-
-  set faculteit-s (item 0 faculteit-profile) - 1
+  set faculteit-profile replace-item 0 faculteit-profile ((item 0 faculteit-profile) - 1)
   set strategie-faculteit "S-"
 end
 
@@ -530,22 +530,22 @@ to max-S
 end
 
 to strat-S+
-  set faculteit-s (item 0 faculteit-profile) + 1
+  set faculteit-profile replace-item 0 faculteit-profile ((item 0 faculteit-profile) + 1)
   set strategie-faculteit "strat-S+"
 end
 
 to strat-S-
-  set faculteit-s (item 0 faculteit-profile) - 1
+  set faculteit-profile replace-item 0 faculteit-profile ((item 0 faculteit-profile) - 1)
   set strategie-faculteit "strat-S-"
 end
 
 to T+
-  set faculteit-t (item 1 faculteit-profile) + 1
+  set faculteit-profile replace-item 1 faculteit-profile ((item 1 faculteit-profile) + 1)
   set strategie-faculteit "T+"
 end
 
 to T-
-  set faculteit-t (item 1 faculteit-profile) - 1
+  set faculteit-profile replace-item 1 faculteit-profile ((item 1 faculteit-profile) - 1)
   set strategie-faculteit "T-"
 end
 
@@ -555,22 +555,22 @@ to max-T
 end
 
 to strat-T+
-  set faculteit-t (item 1 faculteit-profile) + 1
+  set faculteit-profile replace-item 1 faculteit-profile ((item 1 faculteit-profile) + 1)
   set strategie-faculteit "strat-T+"
 end
 
 to strat-T-
-  set faculteit-t (item 1 faculteit-profile) - 1
+  set faculteit-profile replace-item 1 faculteit-profile ((item 1 faculteit-profile) - 1)
   set strategie-faculteit "strat-T-"
 end
 
 to P+
-  set faculteit-p (item 2 faculteit-profile) + 1
+  set faculteit-profile replace-item 2 faculteit-profile ((item 2 faculteit-profile) + 1)
   set strategie-faculteit "P+"
 end
 
 to P-
-  set faculteit-p (item 2 faculteit-profile) - 1
+  set faculteit-profile replace-item 2 faculteit-profile ((item 2 faculteit-profile) - 1)
   set strategie-faculteit "P-"
 end
 
@@ -580,12 +580,12 @@ to max-P
 end
 
 to strat-P+
-  set faculteit-p (item 2 faculteit-profile) + 1
+  set faculteit-profile replace-item 2 faculteit-profile ((item 2 faculteit-profile) + 1)
   set strategie-faculteit "strat-P+"
 end
 
 to strat-P-
-  set faculteit-p (item 2 faculteit-profile) - 1
+  set faculteit-profile replace-item 2 faculteit-profile ((item 2 faculteit-profile) - 1)
   set strategie-faculteit "strat-P-"
 end
 
