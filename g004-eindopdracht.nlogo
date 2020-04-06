@@ -699,7 +699,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-4
+0
 
 SLIDER
 660
@@ -710,7 +710,7 @@ max-friends
 max-friends
 0
 100
-47.0
+30.0
 1
 1
 NIL
@@ -725,10 +725,10 @@ unhappiness
 unhappiness
 0
 100
-51.0
+30.0
 1
 1
-NIL
+%
 HORIZONTAL
 
 SLIDER
@@ -806,10 +806,10 @@ min-rendement
 min-rendement
 0
 100
-0.0
+50.0
 1
 1
-NIL
+%
 HORIZONTAL
 
 BUTTON
@@ -876,13 +876,12 @@ rendement-D
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+Dit model geeft weer wat voor voorlichtingsstrategieën faculteiten kunnen gebruiken en wat voor effect dit zal hebben op studenten in hun keuzeproces. Daarnaast is ook het eerste jaar van deze studenten te volgen met de bijbehorende resultaten.
 
 ## HOW IT WORKS
 
 Het model maakt gebruik van vier faculteiten, die gezammelijk ieder jaar 300 nieuwe studenten binnen krijgen. Deze studenten kiezen een faculteit op basis van een kueze-strategie. Nadat ze een faculteit hebben gekozen gaan ze vrienden maken en college's volgen, er bestaat een kans dat ze niet naar college gaan vanwege een te sociaal leven of het niet bij  
 
-(what rules the agents use to create the overall behavior of the model)
 
 ## HOW TO USE IT
 
@@ -910,7 +909,9 @@ Het model maakt gebruik van vier faculteiten, die gezammelijk ieder jaar 300 nie
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+Payette, N. Many Regions Example. i http://ccl.northwestern.edu/netlogo/models/ManyRegionsExample. 
+
+Wilensky, U. (1997). NetLogo HIV model. http://ccl.northwestern.edu/netlogo/models/HIV. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 @#$#@#$#@
 default
 true
@@ -1217,7 +1218,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
