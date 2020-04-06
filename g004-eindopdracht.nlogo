@@ -6,16 +6,10 @@ patches-own[
   strategie-faculteit-s ; hoe sociaal de faculteit lijkt te zijn
   strategie-faculteit-p ; hoeveel prestige de faculteit lijkt te hebben
   strategie-faculteit-t ; hoe hoog het technische/beta gehalte van de faculteit lijkt te zijn
-  faculteit-s ; hoe sociaal de faculteit is
-  faculteit-p ; hoeveel prestige de faculteit heeft
-  faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
 ]
 
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
-  student-s ; hoe sociaal de student is
-  student-t ; hoe technische de student is of hoe sterk in de betavakken
-  student-p ; hoe belangrijk de student prestige vind
   vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
@@ -71,10 +65,12 @@ globals [
   gem-aantal-vrienden-B
   gem-aantal-vrienden-C
   gem-aantal-vrienden-D
-  tot-t-A
-  tot-t-B
-  tot-t-C
-  tot-t-D
+  student-s ; hoe sociaal de student is
+  student-t ; hoe technische de student is of hoe sterk in de betavakken
+  student-p ; hoe belangrijk de student prestige vind
+  faculteit-s ; hoe sociaal de faculteit is
+  faculteit-p ; hoeveel prestige de faculteit heeft
+  faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
 ]
 
 to setup
@@ -133,7 +129,6 @@ to setup-faculteiten [num-faculteiten]
     set faculteit-t (item 1 faculteit-profile)
     set faculteit-p (item 2 faculteit-profile)
   ]
-      set tot-t-a 0
 end
 
 ; many regions example
@@ -362,29 +357,30 @@ to vrienden-maken ; gebaseerd op partners example & HIV model
  set gem-aantal-vrienden-D ((aantal-vrienden-D / 2) / tot-aantal-studenten-D)
 
 end
-to counting
-  ask turtles with [faculteit-letter = "A"][
-    set tot-t-a (tot-t-a + student-t)
-  ]
-    ask turtles with [faculteit-letter = "B"][
-    set tot-t-b (tot-t-a + student-t)
-  ]
-    ask turtles with [faculteit-letter = "C"][
-    set tot-t-c (tot-t-a + student-t)
-  ]
-    ask turtles with [faculteit-letter = "D"][
-    set tot-t-d (tot-t-a + student-t)
-  ]
-end
+
 
 ;college gaan
+to-report counting-A
+  show sum [student-t] of tot-aantal-studenten-A
+end
+
+to-report counting-B
+ show sum [student-t] of tot-aantal-studenten-B
+end
+
+to-report counting-C
+  show sum [student-t] of tot-aantal-studenten-C
+end
+
+to-report counting-D
+  show sum [student-t] of tot-aantal-studenten-D
+end
+
 to score
-  counting
-  set average-score-A ( tot-t-a / tot-aantal-studenten-A)
-  set average-score-B ( tot-t-b / tot-aantal-studenten-B)
-  set average-score-C ( tot-t-c / tot-aantal-studenten-C)
-  set average-score-D ( tot-t-d / tot-aantal-studenten-D)
-  basis-kans
+set average-score-A ( counting-A / tot-aantal-studenten-A)
+set average-score-B ( counting-B / tot-aantal-studenten-B)
+set average-score-C ( counting-C / tot-aantal-studenten-C)
+set average-score-D ( counting-D / tot-aantal-studenten-D)
 end
 
 to basis-kans
@@ -396,7 +392,7 @@ end
 
 to te-veel-vrienden
 ifelse length vrienden >= max-friends [set te-veel-vrienden-factor 1]
-[ set te-veel-vrienden-factor (length vrienden / max-friends)]
+[ set te-veel-vrienden-factor (vrienden / max-friends)]
 end
 
 to college
@@ -404,14 +400,16 @@ set naar-college-gaan  (random 100 < (((1 - te-veel-vrienden-factor) * basis-kan
 end
 
 to learn
-  set dl ((student-t + [faculteit-t] of patch-here) / 20)
+set dl ((student-t + faculteit-t) / 20)
+print dl
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; scores procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to social-happy
+show count vrienden
 set max-vrienden-happiness (student-s * 6)
-    set happiness-S (length vrienden / max-vrienden-happiness)
+set happiness-S (vrienden / max-vrienden-happiness)
 end
 
 to learning-happy
@@ -419,14 +417,11 @@ ifelse student-t > 5 and faculteit-t > student-t [set happiness-T (faculteit-t /
 end
 
 to prestige-happy
-  set happiness-P ((student-p + [faculteit-p] of patch-here) / 20)
+   set happiness-P ((student-p + faculteit-p) / 20)
 end
 
 to happy-overall
-  social-happy
-  learning-happy
-  prestige-happy
-  set happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
+   set happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -622,11 +617,9 @@ to strat-P-
 end
 
 to einde-jaar
-  ask turtles[
-              score
-              college
-              learn
-              happy-overall
+  college
+  learn
+  ask turtles[happy-overall
               be-positief
               be-happy]
   calculate-rendement
@@ -880,23 +873,14 @@ rendement-D
 1
 11
 
-MONITOR
-77
-428
-154
-473
-NIL
-doorstroom
-17
-1
-11
-
 @#$#@#$#@
 ## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
 ## HOW IT WORKS
+
+Het model maakt gebruik van vier faculteiten, die gezammelijk ieder jaar 300 nieuwe studenten binnen krijgen. Deze studenten kiezen een faculteit op basis van een kueze-strategie. Nadat ze een faculteit hebben gekozen gaan ze vrienden maken en college's volgen, er bestaat een kans dat ze niet naar college gaan vanwege een te sociaal leven of ze de stof is . 
 
 (what rules the agents use to create the overall behavior of the model)
 
@@ -1233,7 +1217,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
