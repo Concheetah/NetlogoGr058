@@ -413,7 +413,7 @@ set happiness-S (vrienden / max-vrienden-happiness)
 end
 
 to learning-happy
-ifelse student-t > 5 = true and faculteit-t > student-t = true [set happiness-T (faculteit-t / 5 - 0.5)][set happiness-T ( faculteit-t / 10 * 0.5)]
+ifelse student-t > 5 and faculteit-t > student-t [set happiness-T (faculteit-t / 5 - 0.5)][set happiness-T ( faculteit-t / 10 * 0.5)]
 end
 
 to prestige-happy
@@ -880,7 +880,7 @@ rendement-D
 
 ## HOW IT WORKS
 
-Het model maakt gebruik van vier faculteiten, die gezammelijk ieder jaar 300 nieuwe studenten binnen krijgen. Deze studenten kiezen een faculteit op basis van een kueze-strategie. Nadat ze een faculteit hebben gekozen gaan ze vrienden maken en college's volgen, er bestaat een kans dat ze niet naar college gaan vanwege een te sociaal leven of ze de stof is . 
+Het model maakt gebruik van vier faculteiten, die gezammelijk ieder jaar 300 nieuwe studenten binnen krijgen. Deze studenten kiezen een faculteit op basis van een kueze-strategie. Nadat ze een faculteit hebben gekozen gaan ze vrienden maken en college's volgen, er bestaat een kans dat ze niet naar college gaan vanwege een te sociaal leven of het niet bij  
 
 (what rules the agents use to create the overall behavior of the model)
 
