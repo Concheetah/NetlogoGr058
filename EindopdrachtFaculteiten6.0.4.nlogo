@@ -47,7 +47,6 @@ globals [
   basis-kans-factor
   te-veel-vrienden-factor
   max-vrienden-happiness
-  doorstroom
   verschil-tot ; totale verschil = verschil-s + verschil-t + verschil-p
   jaar-twee ; true/false
 
@@ -258,6 +257,8 @@ to rationeel
 end
 
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; on-day procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to vrienden-maken
@@ -334,15 +335,16 @@ print learning-score
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
-to pass-year
+to doorstroom
   if mood = happy and learning-score = positief [set jaar-twee [true]]
-  show count turtles with [jaar-twee = true]
+ show count turtles with [jaar-twee = true]
 end
 
 
-;to rendement
-;set rendement (doorstroom / tot-students-faculteit)
-;end
+to rendement
+set rendement ("doorstroom" / tot-students-faculteit)
+  print rendement
+end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; feedback procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
