@@ -1,9 +1,6 @@
 patches-own[
   faculteit ; a list of the faculteiten, in numbers
   faculteit-profile    ; a list of the faculty profile (S, T, P)
-  faculteit-s ; hoe sociaal de faculteit is
-  faculteit-p ; hoeveel prestige de faculteit heeft
-  faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
   faculteit-letter ; faculty name
   strategie-faculteit ; voorlichtingsstrategie van de faculteit
   strategie-faculteit-s ; hoe sociaal de faculteit lijkt te zijn
@@ -13,9 +10,6 @@ patches-own[
 
 turtles-own[
   student-profile ; a list of the students profile (S, T, P)
-  student-s ; hoe sociaal de student is
-  student-t ; hoe technische de student is of hoe sterk in de betavakken
-  student-p ; hoe belangrijk de student prestige vind
   vrienden ; een lijst met alle turtles die vrienden zijn
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
@@ -57,6 +51,7 @@ globals [
   rendement-B
   rendement-C
   rendement-D
+  ren-doorstroom
   pvriend-s
   aantal-vrienden-A
   aantal-vrienden-B
@@ -70,6 +65,12 @@ globals [
   gem-aantal-vrienden-B
   gem-aantal-vrienden-C
   gem-aantal-vrienden-D
+  student-s ; hoe sociaal de student is
+  student-t ; hoe technische de student is of hoe sterk in de betavakken
+  student-p ; hoe belangrijk de student prestige vind
+  faculteit-s ; hoe sociaal de faculteit is
+  faculteit-p ; hoeveel prestige de faculteit heeft
+  faculteit-t ; hoe hoog het technische/beta gehalte is van de faculteit
 ]
 
 to setup
@@ -166,12 +167,9 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; go procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to go
-  one-day
-  calculate-rendement
-  voorlichtingsstrategie
-  ask turtles [die]
-  binnenkomen-universiteit
-  tick
+  repeat 365 [one-day]
+einde-jaar
+tick
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; studenten procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -209,6 +207,7 @@ ask n-of 300 patches with [faculteit-letter != 0][
   if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
 end
+
 to one-day
   move-students
   college
@@ -361,7 +360,6 @@ end
 
 
 ;college gaan
-
 to-report counting-A
   show sum [student-t] of tot-aantal-studenten-A
 end
@@ -393,8 +391,7 @@ to basis-kans
 end
 
 to te-veel-vrienden
-show count vrienden
-ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]
+ifelse length vrienden >= max-friends [set te-veel-vrienden-factor 1]
 [ set te-veel-vrienden-factor (vrienden / max-friends)]
 end
 
@@ -420,11 +417,11 @@ ifelse student-t > 5 and faculteit-t > student-t [set happiness-T (faculteit-t /
 end
 
 to prestige-happy
-set happiness-P ((student-p + faculteit-p) / 20)
+   set happiness-P ((student-p + faculteit-p) / 20)
 end
 
 to happy-overall
-set happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
+   set happiness (((happiness-S + happiness-T + happiness-P) / 3) * 100 )
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; uitslag procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -434,22 +431,25 @@ ifelse happiness >= unhappiness [set mood happy][set mood unhappy]
 end
 
 to be-positief
-show count naar-college-gaan                                     ;; check of het lukt om alle keren te tellen dat student naar college gaat met de code
-set learning-score (dl * naar-college-gaan)
-print learning-score
+if naar-college-gaan = true [
+    let college-geweest 1
+    set college-geweest (college-geweest + 1)                                     ;; check of het lukt om alle keren te tellen dat student naar college gaat met de code
+    set learning-score (dl * college-geweest)]
 ifelse learning-score >= learning-score-min [set learning-score positief][set learning-score negatief]
 end
 
 to-report doorstroom
-  ask turtles [if mood = happy and learning-score = positief [set jaar-twee [true]]]
-  show count turtles with [jaar-twee = true]
+  ask turtles [
+  if mood = happy and learning-score = positief [set jaar-twee [true]]]
+  set ren-doorstroom count turtles with [jaar-twee = true]
+  show ren-doorstroom
 end
 
 to calculate-rendement
-  set rendement-A (doorstroom / tot-aantal-studenten-A)
-  set rendement-B (doorstroom / tot-aantal-studenten-B)
-  set rendement-C (doorstroom / tot-aantal-studenten-C)
-  set rendement-D (doorstroom / tot-aantal-studenten-D)
+  set rendement-A (ren-doorstroom / tot-aantal-studenten-A)
+  set rendement-B (ren-doorstroom / tot-aantal-studenten-B)
+  set rendement-C (ren-doorstroom / tot-aantal-studenten-C)
+  set rendement-D (ren-doorstroom / tot-aantal-studenten-D)
 end
 
 
@@ -616,6 +616,17 @@ to strat-P-
   set strategie-faculteit "strat-P-"
 end
 
+to einde-jaar
+  college
+  learn
+  ask turtles[happy-overall
+              be-positief
+              be-happy]
+  calculate-rendement
+  voorlichtingsstrategie
+  if jaar-twee = true [ask turtles [die]
+  binnenkomen-universiteit]
+end
 
 ;;;;;;;;;;;;;;;;;;;;   TESTING   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; here are some test functions for checking the behavior of the model thusfar
@@ -823,7 +834,7 @@ MONITOR
 461
 309
 506
-NIL
+rendement-A
 rendement-A
 17
 1
@@ -1204,7 +1215,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
