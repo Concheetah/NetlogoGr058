@@ -17,12 +17,14 @@ turtles-own[
   strategie-student ; keuzestrategie van de student (rationeel, snob, feestbeest of ambitieus)
   max-vrienden-bereikt? ; true/false
   student-faculteit
+  unhappy
 ]
 
 globals [
   faculteit-boundaries ; a list of faculteiten definitions, where each faculteit is a list of its min pxcor and max pxcor
   faculteit-letters    ; a list of the faculty letters
   studenten-aantal     ; aantal studenten totaal
+  rendement
 ]
 
 to setup
@@ -31,7 +33,6 @@ to setup
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
   ;test
 ;  nieuwe-strategie
-  show "hello"
   reset-ticks
 end
 
@@ -88,43 +89,74 @@ end
 to nieuwe-strategie
   if (feedbackmechanisme = "Geen feedback") [print "Voorlichtingsstrategie blijft onveranderd."]
   if (feedbackmechanisme = "Rendement-gebaseerd") [rendement-verhogen]
-  if (feedbackmechanisme = "Random") [];hier iets dat er random wordt gekozen uit alle strategieën
+  if (feedbackmechanisme = "Random") [random-feedback]
 end
 
 to rendement-verhogen
-  ask patches with [faculteit = 1][
-  ifelse (rendement > min-rendement)
-  [strategie-ongewijzigd]
-  [ifelse (unhappy > negatief]
-    [strat-S-]
-    [strat-T+]]
-
-  ask patches with [faculteit = 2][
-  ifelse (rendement > min-rendement)
-  [strategie-ongewijzigd]
-  [ifelse (unhappy > negatief]
-    [strat-S-]
-    [strat-T+]]
-
-  ask patches with [faculteit = 3][
-  ifelse (rendement > min-rendement)
-  [strategie-ongewijzigd]
-  [ifelse (unhappy > negatief]
-    [strat-S-]
-    [strat-T+]]
-
-  ask patches with [faculteit = 4][
-  ifelse (rendement > min-rendement)
-  [strategie-ongewijzigd]
-  [ifelse (unhappy > negatief]
-    [strat-S-]
-    [strat-T+]]
+;  ask patches with [faculteit = 1][
+;  ifelse (rendement > min-rendement)
+;  [strategie-ongewijzigd]
+;  [ifelse (unhappy > negatief]
+;    [strat-S-]
+;    [strat-T+]]
+;
+;  ask patches with [faculteit = 2][
+;  ifelse (rendement > min-rendement)
+;  [strategie-ongewijzigd]
+;  [ifelse (unhappy > negatief]
+;    [strat-S-]
+;    [strat-T+]]
+;
+;  ask patches with [faculteit = 3][
+;  ifelse (rendement > min-rendement)
+;  [strategie-ongewijzigd]
+;  [ifelse (unhappy > negatief]
+;    [strat-S-]
+;    [strat-T+]]
+;
+;  ask patches with [faculteit = 4][
+;  ifelse (rendement > min-rendement)
+;  [strategie-ongewijzigd]
+;  [ifelse (unhappy > negatief]
+;    [strat-S-]
+;    [strat-T+]]
 end
 
 
 to strategie-ongewijzigd
 print "Voorlichtingsstrategie blijft onveranderd."
 end
+
+to random-feedback
+  ask patches [let strategieen (list
+    "honest" "S+" "S-" "max-S" "strat-S+" "strat-S-" "T+" "T-" "max-T"
+    "strat-T+" "strat-T-"  "P+"  "P-"  "max-P"  "strat-P+"  "strat-P-")
+  set strategie-faculteit item (random length strategieen) strategieen
+  ]
+end
+
+to voorlichtingsstrategie
+  ask patches[
+  if strategie-faculteit = "honest"   [honest]
+  if strategie-faculteit = "S+"       [S+]
+  if strategie-faculteit = "S-"       [S-]
+  if strategie-faculteit = "max-S"    [max-S]
+  if strategie-faculteit = "strat-S+" [strat-S+]
+  if strategie-faculteit = "strat-S-" [strat-S+]
+  if strategie-faculteit = "T+"       [T+]
+  if strategie-faculteit = "T-"       [T-]
+  if strategie-faculteit = "max-T"    [max-T]
+  if strategie-faculteit = "strat-T+" [strat-T+]
+  if strategie-faculteit = "strat-T-" [strat-T-]
+  if strategie-faculteit = "P+"       [P+]
+  if strategie-faculteit = "P-"       [P-]
+  if strategie-faculteit = "max-P"    [max-P]
+  if strategie-faculteit = "strat-P+" [strat-P+]
+  if strategie-faculteit = "strat-P-" [strat-P-]
+  ]
+end
+
+;;;; voorlichtingsstrategieen
 
 to honest
    ask patches with [faculteit = 1][   ;faculteit A
@@ -265,6 +297,7 @@ to go
 
   ; einde van het jaar
   ; feedback
+  random-feedback
   ; studenten studeren af
   tick
 end
@@ -531,7 +564,7 @@ max-vrienden
 max-vrienden
 0
 60
-55.0
+0.0
 1
 1
 NIL
@@ -567,7 +600,7 @@ max-friends
 max-friends
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -581,7 +614,7 @@ CHOOSER
 feedbackmechanisme
 feedbackmechanisme
 "Geen feedback" "Rendement-gebaseerd" "Random"
-0
+2
 
 SLIDER
 666
@@ -592,7 +625,7 @@ min-rendement
 min-rendement
 0
 100
-50.0
+0.0
 1
 1
 %
