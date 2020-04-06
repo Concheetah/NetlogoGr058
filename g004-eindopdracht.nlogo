@@ -32,7 +32,11 @@ turtles-own[
   unhappy
   positief
   negatief
+<<<<<<< Updated upstream
 
+=======
+  aantal-vrienden-ps
+>>>>>>> Stashed changes
 ]
 
 globals [
@@ -49,7 +53,27 @@ globals [
   max-vrienden-happiness
   verschil-tot ; totale verschil = verschil-s + verschil-t + verschil-p
   jaar-twee ; true/false
+<<<<<<< Updated upstream
   rendement
+=======
+  rendement-A
+  rendement-B
+  rendement-C
+  rendement-D
+  pvriend-s
+  aantal-vrienden-A
+  aantal-vrienden-B
+  aantal-vrienden-C
+  aantal-vrienden-D
+  tot-aantal-studenten-A
+  tot-aantal-studenten-B
+  tot-aantal-studenten-C
+  tot-aantal-studenten-D
+  gem-aantal-vrienden-A
+  gem-aantal-vrienden-B
+  gem-aantal-vrienden-C
+  gem-aantal-vrienden-D
+>>>>>>> Stashed changes
 
 ]
 
@@ -57,7 +81,10 @@ to setup
   clear-all
   setup-faculteiten 4
   setup-studenten              ;; dit moet in go wanneer de one-day procedure klaar is
+<<<<<<< Updated upstream
   ;test
+=======
+>>>>>>> Stashed changes
   reset-ticks
 end
 
@@ -148,6 +175,7 @@ end
 
 to go
   ; setup-studenten
+<<<<<<< Updated upstream
 
   ; studiekeuze
 
@@ -156,6 +184,12 @@ to go
  move-students
   ; naar college gaan
   ;vrienden-maken
+=======
+  ; one-day procedure:
+  move-students
+  college
+  vrienden-maken
+>>>>>>> Stashed changes
 
   ; einde van het jaar
   ; feedback
@@ -181,12 +215,26 @@ to setup-studenten
     set student-p (item 2 student-profile)
     keuzestrategie-student
     set vrienden []
+<<<<<<< Updated upstream
     set max-vrienden-bereikt? false
     set student-faculteit ([faculteit-letter] of patch-here)
    ;   if (keuzestrategie = "Rationeel") [move-to ]
   if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
   if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
   if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
+=======
+    set aantal-vrienden-ps 0
+    set max-vrienden-bereikt? false
+    set student-faculteit ([faculteit-letter] of patch-here)
+  if (keuzestrategie = "Rationeel") [rationeel ]
+  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
+  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
+  if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
+  set tot-aantal-studenten-A count turtles with [student-faculteit = "A"]
+  set tot-aantal-studenten-B count turtles with [student-faculteit = "B"]
+  set tot-aantal-studenten-C count turtles with [student-faculteit = "C"]
+  set tot-aantal-studenten-D count turtles with [student-faculteit = "D"]
+>>>>>>> Stashed changes
   ]]
     ; er moet hier nog iets gebeuren met het vergelijken van de keuzestrategie van de student & voorlichtingsstrategie faculteit
 end
@@ -205,6 +253,10 @@ ask turtles[
       fd (precision (item index speed-student) 1)
       ]
   ]
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 end
 
 to keuzestrategie-student
@@ -250,7 +302,11 @@ to divide
 end
 
 to rationeel
+<<<<<<< Updated upstream
   if color = green [ move-to min-one-of patches with [faculteit-letter != 0][verschil-tot]]
+=======
+   move-to min-one-of patches with [faculteit-letter != 0][verschil-tot]
+>>>>>>> Stashed changes
 end
 
 
@@ -259,7 +315,88 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; one-day procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;vrienden maken
+<<<<<<< Updated upstream
 
+=======
+to vrienden-maken ; gebaseerd op partners example & HIV model
+; vrienden maken faculteit A
+ if gem-aantal-vrienden-A < 60[
+  ask turtles with [faculteit-letter = "A"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+       ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-A (aantal-vrienden-ps + aantal-vrienden-A)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-A ((aantal-vrienden-A  / 2) / tot-aantal-studenten-A)
+
+; vrienden maken faculteit B
+   if gem-aantal-vrienden-B < 60[
+  ask turtles with [faculteit-letter = "B"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-B (aantal-vrienden-ps + aantal-vrienden-B)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-B ((aantal-vrienden-B / 2) / tot-aantal-studenten-B)
+
+; vrienden maken faculteit C
+  if gem-aantal-vrienden-C < 60[
+  ask turtles with [faculteit-letter = "C"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10 ) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-C (aantal-vrienden-ps + aantal-vrienden-C)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-C ((aantal-vrienden-C / 2) / tot-aantal-studenten-C)
+
+; vrienden maken faculteit D
+  if gem-aantal-vrienden-D < 60[
+  ask turtles with [faculteit-letter = "D"] [
+       let potentiele-vriend one-of other turtles-here
+       if potentiele-vriend != nobody[
+        ask potentiele-vriend[set pvriend-s student-s]]
+       let vrienden-kans (((student-s * 10) + (pvriend-s * 10)) / 2 )
+       if random 100 < vrienden-kans[
+       set vrienden (fput potentiele-vriend vrienden)
+      ]
+
+      if empty? vrienden = false[
+      set aantal-vrienden-ps length vrienden
+      set aantal-vrienden-D (aantal-vrienden-ps + aantal-vrienden-D)
+      ]
+    ]
+  ]
+ set gem-aantal-vrienden-D ((aantal-vrienden-D / 2) / tot-aantal-studenten-D)
+
+end
+>>>>>>> Stashed changes
 
 
 ;college gaan
@@ -323,6 +460,7 @@ to-report doorstroom
  show count turtles with [jaar-twee = true]
 end
 
+<<<<<<< Updated upstream
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;klopt misschien niet?
 
 ;to rendement
@@ -332,6 +470,178 @@ end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; feedback procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+=======
+to calculate-rendement
+  set rendement-A (doorstroom / tot-aantal-studenten-A)
+  set rendement-B (doorstroom / tot-aantal-studenten-B)
+  set rendement-C (doorstroom / tot-aantal-studenten-C)
+  set rendement-D (doorstroom / tot-aantal-studenten-D)
+  print rendement-A
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; feedback procedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to nieuwe-strategie
+  if (feedbackmechanisme = "Geen feedback") [print "Voorlichtingsstrategie blijft onveranderd."]
+  if (feedbackmechanisme = "Rendement-gebaseerd") [rendement-verhogen]
+  if (feedbackmechanisme = "Random") [random-feedback]
+end
+
+to rendement-verhogen
+  ask patches with [faculteit = 1][
+  if (rendement-A > min-rendement)
+  [strategie-ongewijzigd]
+    ifelse (count turtles-here with [mood = unhappy] > count turtles-here with [learning-score = negatief])
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 2][
+  if (rendement-B > min-rendement)
+  [strategie-ongewijzigd]
+   ifelse (count turtles-here with [mood = unhappy] > count turtles-here with [learning-score = negatief])
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 3][
+  if (rendement-C > min-rendement)
+  [strategie-ongewijzigd]
+   ifelse (count turtles-here with [mood = unhappy] > count turtles-here with [learning-score = negatief])
+    [strat-S-]
+    [strat-T+]]
+
+  ask patches with [faculteit = 4][
+  if (rendement-D > min-rendement)
+  [strategie-ongewijzigd]
+ ifelse (count turtles-here with [mood = unhappy] > count turtles-here with [learning-score = negatief])
+    [strat-S-]
+    [strat-T+]]
+end
+
+
+to strategie-ongewijzigd
+print "Voorlichtingsstrategie blijft onveranderd."
+end
+
+to random-feedback
+  ask patches [let strategieen (list
+    "honest" "S+" "S-" "max-S" "strat-S+" "strat-S-" "T+" "T-" "max-T"
+    "strat-T+" "strat-T-"  "P+"  "P-"  "max-P"  "strat-P+"  "strat-P-")
+  set strategie-faculteit item (random length strategieen) strategieen
+  ]
+end
+
+to voorlichtingsstrategie
+  ask patches[
+  if strategie-faculteit = "honest"   [honest]
+  if strategie-faculteit = "S+"       [S+]
+  if strategie-faculteit = "S-"       [S-]
+  if strategie-faculteit = "max-S"    [max-S]
+  if strategie-faculteit = "strat-S+" [strat-S+]
+  if strategie-faculteit = "strat-S-" [strat-S+]
+  if strategie-faculteit = "T+"       [T+]
+  if strategie-faculteit = "T-"       [T-]
+  if strategie-faculteit = "max-T"    [max-T]
+  if strategie-faculteit = "strat-T+" [strat-T+]
+  if strategie-faculteit = "strat-T-" [strat-T-]
+  if strategie-faculteit = "P+"       [P+]
+  if strategie-faculteit = "P-"       [P-]
+  if strategie-faculteit = "max-P"    [max-P]
+  if strategie-faculteit = "strat-P+" [strat-P+]
+  if strategie-faculteit = "strat-P-" [strat-P-]
+  ]
+end
+
+;;;;;;;;;;;;;;;; Voorlichtingsprocedures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to honest
+   ask patches with [faculteit = 1][   ;faculteit A
+    set faculteit-letter "A"
+    set faculteit-profile [8 2 2]]
+  ask patches with [faculteit = 2][    ;faculteit B
+    set faculteit-letter "B"
+    set faculteit-profile [2 8 3]]
+  ask patches with [faculteit = 3][    ;faculteit C
+    set faculteit-letter "C"
+    set faculteit-profile [2 8 8]]
+  ask patches with [faculteit = 4][    ;faculteit D
+    set faculteit-letter "D"
+    set faculteit-profile [5 5 9]]
+end
+
+to S+
+ set faculteit-s (item 0 faculteit-profile) + 1
+ set strategie-faculteit "S+"
+end
+
+to S-
+  set faculteit-s (item 0 faculteit-profile) - 1
+  set strategie-faculteit "S-"
+end
+
+to max-S
+  set faculteit-s [10]
+  set strategie-faculteit "max-S"
+end
+
+to strat-S+
+  set faculteit-s (item 0 faculteit-profile) + 1
+  set strategie-faculteit "strat-S+"
+end
+
+to strat-S-
+  set faculteit-s (item 0 faculteit-profile) - 1
+  set strategie-faculteit "strat-S-"
+end
+
+to T+
+  set faculteit-t (item 1 faculteit-profile) + 1
+  set strategie-faculteit "T+"
+end
+
+to T-
+  set faculteit-t (item 1 faculteit-profile) - 1
+  set strategie-faculteit "T-"
+end
+
+to max-T
+  set faculteit-s [10]
+  set strategie-faculteit "max-T"
+end
+
+to strat-T+
+  set faculteit-t (item 1 faculteit-profile) + 1
+  set strategie-faculteit "strat-T+"
+end
+
+to strat-T-
+  set faculteit-t (item 1 faculteit-profile) - 1
+  set strategie-faculteit "strat-T-"
+end
+
+to P+
+  set faculteit-p (item 2 faculteit-profile) + 1
+  set strategie-faculteit "P+"
+end
+
+to P-
+  set faculteit-p (item 2 faculteit-profile) - 1
+  set strategie-faculteit "P-"
+end
+
+to max-P
+  set faculteit-s [10]
+  set strategie-faculteit "max-P"
+end
+
+to strat-P+
+  set faculteit-p (item 2 faculteit-profile) + 1
+  set strategie-faculteit "strat-P+"
+end
+
+to strat-P-
+  set faculteit-p (item 2 faculteit-profile) - 1
+  set strategie-faculteit "strat-P-"
+end
+>>>>>>> Stashed changes
 
 
 
@@ -406,7 +716,11 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
+<<<<<<< Updated upstream
 0
+=======
+1
+>>>>>>> Stashed changes
 
 SLIDER
 660
@@ -511,6 +825,34 @@ OUTPUT
 305
 11
 
+<<<<<<< Updated upstream
+=======
+CHOOSER
+658
+272
+833
+317
+feedbackmechanisme
+feedbackmechanisme
+"Geen feedback" "Rendement-gebaseerd" "Random"
+0
+
+SLIDER
+678
+338
+850
+371
+min-rendement
+min-rendement
+0
+100
+0.0
+1
+1
+%
+HORIZONTAL
+
+>>>>>>> Stashed changes
 @#$#@#$#@
 ## WHAT IS IT?
 
