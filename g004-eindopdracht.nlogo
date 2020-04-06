@@ -43,7 +43,10 @@ globals [
   studenten-faculteit-aantal ; aantal studenten op een faculteit
   dl ; learning-score per college, die student krijgt per keer dat hij/zij naar college gaat
   naar-college-gaan
-  average-score
+  average-score-A
+  average-score-B
+  average-score-C
+  average-score-D
   learning-score ; totale learning-score, positief/negatief
   basis-kans-factor
   te-veel-vrienden-factor
@@ -358,21 +361,45 @@ end
 
 
 ;college gaan
+
+to-report counting-A
+  show sum [student-t] of tot-aantal-studenten-A
+end
+
+to-report counting-B
+ show sum [student-t] of tot-aantal-studenten-B
+end
+
+to-report counting-C
+  show sum [student-t] of tot-aantal-studenten-C
+end
+
+to-report counting-D
+  show sum [student-t] of tot-aantal-studenten-D
+end
+
+to score
+set average-score-A ( counting-A / tot-aantal-studenten-A)
+set average-score-B ( counting-B / tot-aantal-studenten-B)
+set average-score-C ( counting-C / tot-aantal-studenten-C)
+set average-score-D ( counting-D / tot-aantal-studenten-D)
+end
+
 to basis-kans
-show count studenten-faculteit-aantal
-;show totale student-t
-;set average-score ( totale student-t / studenten-faculteit-aantal)
-ifelse average-score >= student-t  [set basis-kans-factor 1 - ((average-score - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score) / 10)]
+  ifelse average-score-A >= student-t  [set basis-kans-factor 1 - ((average-score-A - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score-A) / 10)]
+  ifelse average-score-B >= student-t  [set basis-kans-factor 1 - ((average-score-B - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score-B) / 10)]
+  ifelse average-score-C >= student-t  [set basis-kans-factor 1 - ((average-score-C - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score-C) / 10)]
+  ifelse average-score-D >= student-t  [set basis-kans-factor 1 - ((average-score-D - student-t )/ 10)][set basis-kans-factor 1 - ((student-t - average-score-D) / 10)]
 end
 
 to te-veel-vrienden
 show count vrienden
-ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]       ;; max-friends = max-vrienden?
-[ set te-veel-vrienden-factor (vrienden / max-friends)]            ;; vrienden / max-friends anders defineren
+ifelse vrienden >= max-friends [set te-veel-vrienden-factor 1]
+[ set te-veel-vrienden-factor (vrienden / max-friends)]
 end
 
 to college
-set naar-college-gaan  (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))       ;; vind iets anders dan set, set heeft twee inputs nodig
+set naar-college-gaan  (random 100 < (((1 - te-veel-vrienden-factor) * basis-kans-factor) * 100))
 end
 
 to learn
@@ -1133,7 +1160,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
