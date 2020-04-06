@@ -206,10 +206,10 @@ ask n-of 300 patches with [faculteit-letter != 0][
     set vrienden []
     set max-vrienden-bereikt? false
     set student-faculteit ([faculteit-letter] of patch-here)
-  if (keuzestrategie = "Rationeel") [rationeel]
-  if (keuzestrategie = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
-  if (keuzestrategie = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
-  if (keuzestrategie = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
+  if (strategie-student = "Rationeel") [rationeel]
+  if (strategie-student = "Feestbeest") [move-to max-one-of patches with [faculteit-letter != 0][item 0 faculteit-profile]]
+  if (strategie-student = "Ambitieus") [move-to max-one-of patches with [faculteit-letter != 0] [item 1 faculteit-profile]]
+  if (strategie-student = "Snob") [move-to max-one-of patches with [faculteit-letter != 0] [item 2 faculteit-profile]]
   ]]
 end
 
@@ -463,7 +463,7 @@ end
 to nieuwe-strategie
   if (feedbackmechanisme = "Geen feedback") [print "Voorlichtingsstrategie blijft onveranderd."]
   if (feedbackmechanisme = "Rendement-gebaseerd") [rendement-verhogen]
-  if (feedbackmechanisme = "Random") [];hier iets dat er random wordt gekozen uit alle strategieën
+  if (feedbackmechanisme = "Random") [random-feedback voorlichtingsstrategie]; er wordt random gekozen uit alle strategieën
 end
 
 to rendement-verhogen
@@ -706,7 +706,7 @@ CHOOSER
 keuzestrategie
 keuzestrategie
 "Rationeel" "Feestbeest" "Ambitieus" "Snob" "Mixed"
-0
+4
 
 SLIDER
 660
